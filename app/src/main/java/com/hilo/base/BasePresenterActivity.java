@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 
+import com.hilo.MainActivity;
 import com.hilo.R;
 import com.hilo.activity.SwipeBackActivity;
 import com.hilo.animotions.BounceEnter.BounceTopEnter;
@@ -140,14 +141,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
     }
 
     @Override
-    protected void onDestroy() {
-        vu = null;
-        mActivityManager.remove(this);
-        unregisterReceiver(logOutReceiver);
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mActivityManager.size() == 1) {
@@ -206,14 +199,38 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
         mActivityManager = null;
     }
 
-    protected void onBindVu() {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        afterResume();
     }
 
-    ;
+    @Override
+    protected void onPause() {
+        beforePause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        beforeDestroy();
+        vu = null;
+        mActivityManager.remove(this);
+        unregisterReceiver(logOutReceiver);
+        super.onDestroy();
+    }
+
+
+    protected void onBindVu() {}
+    protected void afterResume() {}
+    protected void beforePause() {}
+    protected void beforeDestroy() {}
 
     protected abstract Class<V> getVuClass();
-
     protected abstract void onRefreshingListener();
+
+
 
     private static class DelayHandler extends Handler {
         private final WeakReference<BasePresenterActivity> weakReference;

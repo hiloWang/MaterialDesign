@@ -1,6 +1,5 @@
 package com.hilo.adapter;
 
-import android.animation.Animator;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -129,25 +126,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     }
                 }
             });
-
-            mImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Animator animator;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        animator = ViewAnimationUtils.createCircularReveal(
-                                mImage,
-                                0,
-                                0,
-                                0,
-                                (float) Math.hypot(mImage.getWidth(), mImage.getHeight()));
-                        animator.setInterpolator(new AccelerateInterpolator());
-                        animator.setDuration(500);
-                        animator.start();
-                    }
-                }
-            });
-
         }
 
         public void bindData(List<String> data, int bgColor, int position) {

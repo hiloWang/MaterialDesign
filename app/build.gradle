@@ -25,6 +25,10 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    // mvvm
+  /*  dataBinding {
+        enabled true
+    }*/
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'

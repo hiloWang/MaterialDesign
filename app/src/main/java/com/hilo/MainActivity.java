@@ -24,10 +24,10 @@ public class MainActivity extends BasePresenterActivity<MainVu>
         showFragment(RecyclerFragment.class);
     }
 
-    @Override
-    public boolean canSwipeRefreshChildScrollUp() {
-        return super.canSwipeRefreshChildScrollUp();
-    }
+//    @Override
+//    public boolean canSwipeRefreshChildScrollUp() {
+//        return super.canSwipeRefreshChildScrollUp();
+//    }
 
     @Override
     protected Class getVuClass() {
@@ -55,7 +55,7 @@ public class MainActivity extends BasePresenterActivity<MainVu>
     }
 
     private <T extends Fragment> void showFragment(Class<T> clzz) {
-        RecyclerFragment mRecyclerFragment = RecyclerFragment.getInstance(mContext);
+        RecyclerFragment mRecyclerFragment = RecyclerFragment.getInstance();
         try {
             if (mRecyclerFragment == null) {
                 getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, clzz.newInstance(), clzz.getSimpleName()).commit();

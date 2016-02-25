@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -23,211 +21,213 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SwipeBackLayout extends FrameLayout {
-	private static final String TAG = SwipeBackLayout.class.getSimpleName();
-	private View mContentView;
-	private int mTouchSlop;
-	private int downX;
-	private int downY;
-	private int tempX;
-	private Scroller mScroller;
-	private int viewWidth;
-	private boolean isSilding;
-	private boolean isFinish;
-	private Drawable mShadowDrawable;
-	private Activity mActivity;
-	private List<ViewPager> mViewPagers = new LinkedList<ViewPager>();
-	
-	public SwipeBackLayout(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    private static final String TAG = SwipeBackLayout.class.getSimpleName();
+    private View mContentView;
+    private int mTouchSlop;
+    private int downX;
+    private int downY;
+    private int tempX;
+    private Scroller mScroller;
+    private int viewWidth;
+    private boolean isSilding;
+    private boolean isFinish;
+    private Drawable mShadowDrawable;
+    private Activity mActivity;
+    private List<ViewPager> mViewPagers = new LinkedList<ViewPager>();
 
-	public SwipeBackLayout(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+    public SwipeBackLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-		mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-		mScroller = new Scroller(context);
+    public SwipeBackLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
 
-		mShadowDrawable = getResources().getDrawable(R.mipmap.shadow_left);
-	}
-	
-	
-	public void attachToActivity(Activity activity) {
-		mActivity = activity;
-		TypedArray a = activity.getTheme().obtainStyledAttributes(
-				new int[] { android.R.attr.windowBackground });
-		int background = a.getResourceId(0, 0);
-		a.recycle();
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        mScroller = new Scroller(context);
 
-		ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
-		ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
-		decorChild.setBackgroundResource(background);
-		decor.removeView(decorChild);
-		addView(decorChild);
-		setContentView(decorChild);
-		decor.addView(this);
-	}
+        mShadowDrawable = getResources().getDrawable(R.mipmap.shadow_left);
+    }
 
-	private void setContentView(View decorChild) {
-		mContentView = (View) decorChild.getParent();
-	}
 
-	/**
-	 * 事件拦截操作
-	 */
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		//处理ViewPager冲突问题
-		ViewPager mViewPager = getTouchViewPager(mViewPagers, ev);
-		Log.i(TAG, "mViewPager = " + mViewPager);
-		
-		if(mViewPager != null && mViewPager.getCurrentItem() != 0){
-			return super.onInterceptTouchEvent(ev);
-		}
+    public void attachToActivity(Activity activity) {
+        mActivity = activity;
+        TypedArray a = activity.getTheme().obtainStyledAttributes(
+                new int[]{android.R.attr.windowBackground});
+        int background = a.getResourceId(0, 0);
+        a.recycle();
 
-		switch (ev.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			downX = tempX = (int) ev.getRawX();
-			downY = (int) ev.getRawY();
-			break;
-		case MotionEvent.ACTION_MOVE:
-			int moveX = (int) ev.getRawX();
-			if (moveX - downX > mTouchSlop
-					&& Math.abs((int) ev.getRawY() - downY) < mTouchSlop) {
-				return true;
-			}
-			break;
-		}
+        ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
+        ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
+        decorChild.setBackgroundResource(background);
+        decor.removeView(decorChild);
+        addView(decorChild);
+        setContentView(decorChild);
+        decor.addView(this);
+    }
 
-		return super.onInterceptTouchEvent(ev);
-	}
+    private void setContentView(View decorChild) {
+        mContentView = (View) decorChild.getParent();
+    }
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_MOVE:
-			int moveX = (int) event.getRawX();
-			int deltaX = tempX - moveX;
-			tempX = moveX;
-			if (moveX - downX > mTouchSlop
-					&& Math.abs((int) event.getRawY() - downY) < mTouchSlop) {
-				isSilding = true;
-			}
+    /**
+     * 事件拦截操作
+     */
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        //处理ViewPager冲突问题
+        ViewPager mViewPager = getTouchViewPager(mViewPagers, ev);
+//		Log.i(TAG, "mViewPager = " + mViewPager);
 
-			if (moveX - downX >= 0 && isSilding) {
-				mContentView.scrollBy(deltaX, 0);
-			}
-			break;
-		case MotionEvent.ACTION_UP:
-			isSilding = false;
-			if (mContentView.getScrollX() <= -viewWidth / 2) {
-				isFinish = true;
-				scrollRight();
-			} else {
-				scrollOrigin();
-				isFinish = false;
-			}
-			break;
-		}
+        if (mViewPager != null && mViewPager.getCurrentItem() != 0) {
+            return super.onInterceptTouchEvent(ev);
+        }
 
-		return true;
-	}
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downX = tempX = (int) ev.getRawX();
+                downY = (int) ev.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int moveX = (int) ev.getRawX();
+                if (moveX - downX > mTouchSlop
+                        && Math.abs((int) ev.getRawY() - downY) < mTouchSlop) {
+                    return true;
+                }
+                break;
+        }
 
-	/**
-	 * 获取SwipeBackLayout里面的ViewPager的集合
-	 * @param mViewPagers
-	 * @param parent
-	 */
-	private void getAlLViewPager(List<ViewPager> mViewPagers, ViewGroup parent){
-		int childCount = parent.getChildCount();
-		for(int i=0; i<childCount; i++){
-			View child = parent.getChildAt(i);
-			if(child instanceof ViewPager){
-				mViewPagers.add((ViewPager)child);
-			}else if(child instanceof ViewGroup){
-				getAlLViewPager(mViewPagers, (ViewGroup)child);
-			}
-		}
-	}
+        return super.onInterceptTouchEvent(ev);
+    }
 
-	/**
-	 * 返回我们touch的ViewPager
-	 * @param mViewPagers
-	 * @param ev
-	 * @return
-	 */
-	private ViewPager getTouchViewPager(List<ViewPager> mViewPagers, MotionEvent ev){
-		if(mViewPagers == null || mViewPagers.size() == 0){
-			return null;
-		}
-		Rect mRect = new Rect();
-		for(ViewPager v : mViewPagers){
-			v.getHitRect(mRect);
-			
-			if(mRect.contains((int)ev.getX(), (int)ev.getY())){
-				return v;
-			}
-		}
-		return null;
-	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                int moveX = (int) event.getRawX();
+                int deltaX = tempX - moveX;
+                tempX = moveX;
+                if (moveX - downX > mTouchSlop
+                        && Math.abs((int) event.getRawY() - downY) < mTouchSlop) {
+                    isSilding = true;
+                }
 
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		super.onLayout(changed, l, t, r, b);
-		if (changed) {
-			viewWidth = this.getWidth();
-			
-			getAlLViewPager(mViewPagers, this);
-			Log.i(TAG, "ViewPager size = " + mViewPagers.size());
-		}
-	}
+                if (moveX - downX >= 0 && isSilding) {
+                    mContentView.scrollBy(deltaX, 0);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                isSilding = false;
+                if (mContentView.getScrollX() <= -viewWidth / 2) {
+                    isFinish = true;
+                    scrollRight();
+                } else {
+                    scrollOrigin();
+                    isFinish = false;
+                }
+                break;
+        }
 
-	@Override
-	protected void dispatchDraw(Canvas canvas) {
-		super.dispatchDraw(canvas);
-		if (mShadowDrawable != null && mContentView != null) {
+        return true;
+    }
 
-			int left = mContentView.getLeft()
-					- mShadowDrawable.getIntrinsicWidth();
-			int right = left + mShadowDrawable.getIntrinsicWidth();
-			int top = mContentView.getTop();
-			int bottom = mContentView.getBottom();
+    /**
+     * 获取SwipeBackLayout里面的ViewPager的集合
+     *
+     * @param mViewPagers
+     * @param parent
+     */
+    private void getAlLViewPager(List<ViewPager> mViewPagers, ViewGroup parent) {
+        int childCount = parent.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = parent.getChildAt(i);
+            if (child instanceof ViewPager) {
+                mViewPagers.add((ViewPager) child);
+            } else if (child instanceof ViewGroup) {
+                getAlLViewPager(mViewPagers, (ViewGroup) child);
+            }
+        }
+    }
 
-			mShadowDrawable.setBounds(left, top, right, bottom);
-			mShadowDrawable.draw(canvas);
-		}
+    /**
+     * 返回我们touch的ViewPager
+     *
+     * @param mViewPagers
+     * @param ev
+     * @return
+     */
+    private ViewPager getTouchViewPager(List<ViewPager> mViewPagers, MotionEvent ev) {
+        if (mViewPagers == null || mViewPagers.size() == 0) {
+            return null;
+        }
+        Rect mRect = new Rect();
+        for (ViewPager v : mViewPagers) {
+            v.getHitRect(mRect);
 
-	}
+            if (mRect.contains((int) ev.getX(), (int) ev.getY())) {
+                return v;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * 滚动出界面
-	 */
-	private void scrollRight() {
-		final int delta = (viewWidth + mContentView.getScrollX());
-		mScroller.startScroll(mContentView.getScrollX(), 0, -delta + 1, 0,
-				Math.abs(delta));
-		postInvalidate();
-	}
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        if (changed) {
+            viewWidth = this.getWidth();
 
-	/**
-	 * 滚动到起始位置
-	 */
-	private void scrollOrigin() {
-		int delta = mContentView.getScrollX();
-		mScroller.startScroll(mContentView.getScrollX(), 0, -delta, 0,
-				Math.abs(delta));
-		postInvalidate();
-	}
+            getAlLViewPager(mViewPagers, this);
+//			Log.i(TAG, "ViewPager size = " + mViewPagers.size());
+        }
+    }
 
-	@Override
-	public void computeScroll() {
-		// 调用startScroll的时候scroller.computeScrollOffset()返回true，
-		if (mScroller.computeScrollOffset()) {
-			mContentView.scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
-			postInvalidate();
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        if (mShadowDrawable != null && mContentView != null) {
 
-			if (mScroller.isFinished() && isFinish) {
-				mActivity.finish();
-			}
-		}
-	}
+            int left = mContentView.getLeft()
+                    - mShadowDrawable.getIntrinsicWidth();
+            int right = left + mShadowDrawable.getIntrinsicWidth();
+            int top = mContentView.getTop();
+            int bottom = mContentView.getBottom();
+
+            mShadowDrawable.setBounds(left, top, right, bottom);
+            mShadowDrawable.draw(canvas);
+        }
+
+    }
+
+    /**
+     * 滚动出界面
+     */
+    private void scrollRight() {
+        final int delta = (viewWidth + mContentView.getScrollX());
+        mScroller.startScroll(mContentView.getScrollX(), 0, -delta + 1, 0,
+                Math.abs(delta));
+        postInvalidate();
+    }
+
+    /**
+     * 滚动到起始位置
+     */
+    private void scrollOrigin() {
+        int delta = mContentView.getScrollX();
+        mScroller.startScroll(mContentView.getScrollX(), 0, -delta, 0,
+                Math.abs(delta));
+        postInvalidate();
+    }
+
+    @Override
+    public void computeScroll() {
+        // 调用startScroll的时候scroller.computeScrollOffset()返回true，
+        if (mScroller.computeScrollOffset()) {
+            mContentView.scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            postInvalidate();
+
+            if (mScroller.isFinished() && isFinish) {
+                mActivity.finish();
+            }
+        }
+    }
 }

@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> {
 
-    private Context mContext;
     private List<String> mData;
 
     // 下拉刷新
@@ -25,7 +24,6 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         @Override
         public void execute(Integer position) {
             if(position == -1) {
-                Toast.makeText(mContext, "RecyclerFragment onRefresh ...", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -46,9 +44,8 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         }
     };
 
-    public static RecyclerFragment getInstance(Context context) {
+    public static RecyclerFragment getInstance() {
         RecyclerFragment fragment = new RecyclerFragment();
-        fragment.mContext = context;
         return fragment;
     }
 

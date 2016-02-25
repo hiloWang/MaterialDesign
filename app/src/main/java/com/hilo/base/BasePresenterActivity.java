@@ -2,28 +2,26 @@ package com.hilo.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.KeyEvent;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 
 import com.hilo.R;
-import com.hilo.activity.SwipeBackActivity;
-import com.hilo.animotions.BounceEnter.BounceTopEnter;
-import com.hilo.animotions.SlideExit.SlideBottomExit;
 import com.hilo.dialog.actionsheet.NormalDialog;
-import com.hilo.dialog.actionsheet.OnBtnClickL;
 import com.hilo.interfaces.Vu;
 import com.hilo.receiver.ExceptionLoingOutReceiver;
 import com.hilo.utils.LogUtils;
 import com.hilo.utils.UtilTool;
 import com.hilo.view.MultiSwipeRefreshLayout;
+import com.hilo.view.SwipeBackLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -31,7 +29,7 @@ import java.util.LinkedList;
 /**
  * Created by hilo on 16/2/24.
  */
-public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActivity
+public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActivity
         implements MultiSwipeRefreshLayout.CanChildScrollUpCallback {
 
     protected Context mContext;
@@ -39,11 +37,13 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
     protected V vu;
     protected static SwipeRefreshLayout mSwipeRefreshLayout;
     protected Bundle mSaveInstanceBunder;
-    protected static LinkedList<Activity> mActivityManager = new LinkedList();
+    protected static LinkedList<Activity> mActivityManager;
+    protected SwipeBackLayout swipeBackLayout;
     private ExceptionLoingOutReceiver logOutReceiver;
 
     private static boolean isExitApp;
     private static final int MAIN_CONTENT_FADEIN_DURATION = 250;
+    private NormalDialog exitDialog;
     private static final int DELAY_BACK_ACTIVITY = 0x001;
 
     @Override
@@ -51,10 +51,14 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         LogUtils.I(BasePresenterActivity.class.getName());
+        swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
+                R.layout.activity_swipebackbase, null);
+        swipeBackLayout.attachToActivity(this);
         mContext = this;
         mHandler = new DelayHandler(this);
         mSaveInstanceBunder = savedInstanceState;
         registerActivityLoginOut();
+        if (mActivityManager == null) mActivityManager = new LinkedList<>();
         mActivityManager.add(this);
 
         try {
@@ -68,6 +72,12 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.activity_swipeback_slide_right_in, R.anim.activity_swipeback_slide_remain);
     }
 
     @Override
@@ -139,11 +149,19 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
         return false;
     }
 
+
+    // Press the back button in mobile phone
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
+    }
+
+ /*   @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+       *//* if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mActivityManager.size() == 1) {
-                final NormalDialog exitDialog = new NormalDialog(mContext);
+                exitDialog = new NormalDialog(mContext);
                 exitDialog.content("亲,真的要走吗?再看会儿吧~(●—●)")
                         .style(NormalDialog.STYLE_TWO)
                         .titleTextSize(23)
@@ -162,17 +180,17 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
                     @Override
                     public void onBtnClick() {
                         exitDialog.superDismiss();
+                        exitDialog = null;
                         finish();
                     }
                 });
             } else {
                 finish();
-                System.exit(0);
             }
             return true;
-        }
+        }*//*
         return false;
-    }
+    }*/
 
     public static void exit() {
         try {
@@ -215,20 +233,28 @@ public abstract class BasePresenterActivity<V extends Vu> extends SwipeBackActiv
     protected void onDestroy() {
         beforeDestroy();
         vu = null;
+        mSwipeRefreshLayout = null;
         mActivityManager.remove(this);
         unregisterReceiver(logOutReceiver);
         super.onDestroy();
     }
 
 
-    protected void onBindVu() {}
-    protected void afterResume() {}
-    protected void beforePause() {}
-    protected void beforeDestroy() {}
+    protected void onBindVu() {
+    }
+
+    protected void afterResume() {
+    }
+
+    protected void beforePause() {
+    }
+
+    protected void beforeDestroy() {
+    }
 
     protected abstract Class<V> getVuClass();
-    protected abstract void onRefreshingListener();
 
+    protected abstract void onRefreshingListener();
 
 
     private static class DelayHandler extends Handler {

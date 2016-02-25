@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTextView">
+        <attr name="ctv_textSize" format="dimension"/>
+        <attr name="ctv_textViewWidth" format="dimension"/>
+        <attr name="ctv_textViewHeight" format="dimension"/>
+        <attr name="ctv_backgroundColorPressed" format="color"/>
+        <attr name="ctv_backgroundColorSelected" format="color"/>
+        <attr name="customTextViewStyle" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="MultiSwipeRefreshLayout">
+        <attr name="foreground" format="reference"/>
+    </declare-styleable>
+</resources>

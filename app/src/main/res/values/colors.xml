@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="write">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="refresh_progress">#FFF7D23E</color>
+    <!-- Material Design-->
+
+    <!-- 普通文字-->
+    <color name="design_black_text">#87000000</color>
+    <!-- 减淡文字-->
+    <color name="design_black_secondary">#54000000</color>
+    <!-- 禁用文字/提示文字-->
+    <color name="design_black_disable">#26000000</color>
+    <!-- 分割线-->
+    <color name="design_black_dividers">#12000000</color>
+
+    <!-- 普通文字-->
+    <color name="design_write_text">#FFFFFF</color>
+    <!-- 减淡文字-->
+    <color name="design_write_secondary">#70FFFFFF</color>
+    <!-- 禁用文字/提示文字-->
+    <color name="design_write_disable">#30FFFFFF</color>
+    <!-- 分割线-->
+    <color name="design_write_dividers">#12FFFFFF</color>
+
+    <color name="design_bgcolor">#efefef</color>
+
+    <color name="design_text_bgcolor">#f8f9fa</color>
+
+</resources>

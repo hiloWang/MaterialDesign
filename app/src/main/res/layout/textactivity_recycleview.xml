@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/design_bgcolor"
+    android:orientation="vertical"
+    tools:context=".fragment.RecyclerFragment">
+
+    <!--<com.hilo.view.CustomTextView
+        android:id="@+id/ctv_subtitle"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        ctv:ctv_textViewWidth="100dp"
+        ctv:ctv_textSize="9sp"
+        ctv:ctv_backgroundColorPressed="@color/colorAccent"
+        android:text="标题" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

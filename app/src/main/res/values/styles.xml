@@ -1,0 +1,44 @@
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        // 解决swipeBackActivity滑动黑屏
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.Material">
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">#FF80AB</item>
+        <!--   your app branding color for the app bar -->
+        <item name="colorPrimary">#F50057</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- 正常状态下字体颜色和icon颜色-->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!-- 导航栏背景颜色 api21-->
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <!-- Activity 自定义过渡动画-->
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:windowEnterTransition" tools:targetApi="lollipop">@android:transition/explode</item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">@android:transition/fade</item>
+        <!-- 指定shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition" tools:targetApi="lollipop">@android:transition/slide_left</item>
+        <item name="android:windowSharedElementExitTransition" tools:targetApi="lollipop">@android:transition/slide_bottom</item>
+        <!-- 测试自定义view3个参数的构造方法-->
+        <item name="customTextViewStyle">@style/custom_textview_style</item>
+        </style>
+
+        <style name="custom_textview_style">
+            <item name="ctv_textViewWidth">100dp</item>
+        </style>
+</resources>

@@ -13,7 +13,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 
-import com.hilo.MainActivity;
 import com.hilo.R;
 import com.hilo.activity.SwipeBackActivity;
 import com.hilo.animotions.BounceEnter.BounceTopEnter;

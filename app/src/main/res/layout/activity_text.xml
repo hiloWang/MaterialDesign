@@ -12,27 +12,38 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/item_cardview"
+    <com.hilo.view.MultiSwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="1dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="1dp">
+        app:foreground="@drawable/header_shadow">
 
-        <TextView
-            android:id="@+id/item_1"
-            android:transitionName=""
+        <android.support.v7.widget.CardView
+            android:id="@+id/item_cardview"
+            android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="150dp"
-            android:text="右划backActivity"
-            android:textSize="21sp"
-            android:translationZ="16dp" />
-    </android.support.v7.widget.CardView>
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="1dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="1dp">
+
+            <TextView
+                android:id="@+id/item_1"
+                android:transitionName=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="150dp"
+                android:text="右划backActivity"
+                android:textSize="21sp"
+                android:translationZ="16dp" />
+        </android.support.v7.widget.CardView>
+
+    </com.hilo.view.MultiSwipeRefreshLayout>
+
+
 </RelativeLayout>

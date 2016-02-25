@@ -102,8 +102,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder /*AnimateViewHolder*/ {
-        private List<String> data;
-        private int bgColor, position;
         private View itemView;
         private TextView mTv1;
         private ImageView mImage;
@@ -129,9 +127,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
         public void bindData(List<String> data, int bgColor, int position) {
-            this.data = data;
-            this.bgColor = bgColor;
-            this.position = position;
             mTv1.setText(data.get(position).toString());
             Picasso.with(mContext).load(R.mipmap.chip).into(mImage);
             itemView.setBackgroundColor(bgColor);

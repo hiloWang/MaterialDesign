@@ -20,6 +20,7 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
     private Context mContext;
     private List<String> mData;
 
+    // 下拉刷新
     VuCallBack<Integer> mOnRefreshCallBack = new VuCallBack<Integer>() {
         @Override
         public void execute(Integer position) {
@@ -28,12 +29,6 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
             }
         }
     };
-
-    public static RecyclerFragment getInstance(Context context) {
-        RecyclerFragment fragment = new RecyclerFragment();
-        fragment.mContext = context;
-        return fragment;
-    }
 
     // 删除item数据
     VuCallBack<Integer> mDelDataCallback = new VuCallBack<Integer>() {
@@ -51,9 +46,10 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public static RecyclerFragment getInstance(Context context) {
+        RecyclerFragment fragment = new RecyclerFragment();
+        fragment.mContext = context;
+        return fragment;
     }
 
     @Override
@@ -72,6 +68,11 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         ((MainActivity) mContext).setAddDataCallback(mAddDataCallback);
 
         vu.setAdapterData(mData);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

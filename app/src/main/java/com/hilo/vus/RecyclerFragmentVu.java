@@ -1,6 +1,7 @@
 package com.hilo.vus;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +37,7 @@ public class RecyclerFragmentVu implements Vu {
     private BasePresenterFragment.Callbacks mCallbacks;
 
     @Override
-    public void init(LayoutInflater inflater, ViewGroup container) {
+    public void init(LayoutInflater inflater, ViewGroup container, Context context) {
         rootView = inflater.inflate(R.layout.textactivity_recycleview, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycleView);
         mLinearLayoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -99,7 +100,7 @@ public class RecyclerFragmentVu implements Vu {
 
             @Override
             public void onItemlongClick(View view, int position) {
-                if(mCallbacks != null)
+                if (mCallbacks != null)
                     mCallbacks.onItemSelected(mCallbacks.getActivityCallBacks(), position, "当前点击了第" + position + "个条目");
             }
         });
@@ -114,7 +115,9 @@ public class RecyclerFragmentVu implements Vu {
         this.mCallbacks = callbacks;
     }
 
-    /** ------------------------ bind data ------------------------ **/
+    /**
+     * ------------------------ bind data ------------------------
+     **/
 
     public void setAdapterData(List<String> data) {
         mAdapter.setData(data);
@@ -126,7 +129,7 @@ public class RecyclerFragmentVu implements Vu {
     }
 
     public void setAddData(String msg, int position) {
-        if(mAdapter.getItemCount() > position)
+        if (mAdapter.getItemCount() > position)
             mAdapter.add(msg, position);
     }
 }

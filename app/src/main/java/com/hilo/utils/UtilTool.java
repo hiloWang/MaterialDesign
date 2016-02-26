@@ -15,7 +15,8 @@ public class UtilTool {
     }
 
     public static void setVariablesNull() {
-
+        BasePresenterActivity.mSwipeRefreshManager = null;
+        BasePresenterActivity.mSwipeRefreshLayout = null;
     }
 
 

@@ -1,12 +1,10 @@
 package com.hilo.fragment;
 
-import android.content.Context;
 import android.widget.Toast;
 
 import com.hilo.MainActivity;
 import com.hilo.base.BasePresenterFragment;
 import com.hilo.interfaces.VuCallBack;
-import com.hilo.utils.UIUtils;
 import com.hilo.vus.RecyclerFragmentVu;
 
 import java.util.ArrayList;
@@ -23,7 +21,8 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
     VuCallBack<Integer> mOnRefreshCallBack = new VuCallBack<Integer>() {
         @Override
         public void execute(Integer position) {
-            if(position == -1) {
+            if (position == -1) {
+                Toast.makeText(mContext, mContext.getClass().getName(), Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -55,7 +54,7 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         for (int i = 0; i < 20; i++) {
             mData.add("点我跳转activity，动画效果 <" + i + ">");
         }
-        ((MainActivity)mContext).setOnRefreshingCallback(mOnRefreshCallBack);
+        ((MainActivity) mContext).setOnRefreshingCallback(mOnRefreshCallBack);
     }
 
     @Override

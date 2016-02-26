@@ -31,7 +31,7 @@ public class MyApplication extends Application {
 //        boolean isTablet = UIUtils.isTablet(getResources());
         if (getResources().getBoolean(R.bool.isTablet)) cfg.deviceType = 2;
         cfg.deviceName = android.os.Build.BRAND + "_" + android.os.Build.PRODUCT;
-        LogUtils.I("klog", "deviceName: " + cfg.deviceName);
+        LogUtils.I("deviceName: " + cfg.deviceName);
 
         AssetManager mgr = this.getAssets();
         font = Typeface.createFromAsset(mgr, "fonts/PingFang Medium.ttf");

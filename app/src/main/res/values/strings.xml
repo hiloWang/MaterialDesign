@@ -5,4 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- pullToRefresh colors -->
+    <integer-array name="google_colors">
+        <item>@color/pulltorefresh_yellow</item>
+      <!--  <item>@color/pulltorefresh_red</item>
+        <item>@color/pulltorefresh_blue</item>
+        <item>@color/pulltorefresh_green</item>-->
+    </integer-array>
 </resources>

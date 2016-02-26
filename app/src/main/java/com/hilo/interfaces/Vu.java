@@ -1,5 +1,6 @@
 package com.hilo.interfaces;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,6 @@ import android.view.ViewGroup;
  * Drscription:
  */
 public interface Vu {
-    void init(LayoutInflater inflater, ViewGroup container);
+    void init(LayoutInflater inflater, ViewGroup container, Context context);
     View getView();
 }

@@ -7,6 +7,12 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="refresh_progress">#FFF7D23E</color>
+
+    <color name="pulltorefresh_red">#FFC93437</color>
+    <color name="pulltorefresh_blue">#00B0FF</color>
+    <color name="pulltorefresh_yellow">#FFF7D23E</color>
+    <color name="pulltorefresh_green">#FF34A350</color>
+
     <!-- Material Design-->
 
     <!-- 普通文字-->

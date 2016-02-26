@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.hilo.MainActivity;
 import com.hilo.R;
 import com.hilo.TextActivity;
+import com.hilo.utils.LogUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -115,12 +116,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             mTv1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, TextActivity.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ((MainActivity) mContext).getWindow().setExitTransition(new TransitionSet());
-                        mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(((MainActivity) mContext)).toBundle());
-                    } else {
-                        mContext.startActivity(intent);
+                    if(!mContext.getClass().getName().equals("com.hilo.TextActivity")) {
+                        Intent intent = new Intent(mContext, TextActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            ((MainActivity) mContext).getWindow().setExitTransition(new TransitionSet());
+                            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(((MainActivity) mContext)).toBundle());
+                        } else {
+                            mContext.startActivity(intent);
+                        }
                     }
                 }
             });

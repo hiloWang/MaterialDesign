@@ -8,36 +8,38 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.hilo.R;
 import com.hilo.dialog.actionsheet.NormalDialog;
 import com.hilo.interfaces.Vu;
+import com.hilo.others.pulltorefresh.PullRefreshLayout;
 import com.hilo.receiver.ExceptionLoingOutReceiver;
 import com.hilo.utils.LogUtils;
 import com.hilo.utils.UtilTool;
-import com.hilo.view.MultiSwipeRefreshLayout;
 import com.hilo.view.SwipeBackLayout;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Created by hilo on 16/2/24.
  */
-public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActivity
-        implements MultiSwipeRefreshLayout.CanChildScrollUpCallback {
+public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActivity {
 
     protected Context mContext;
     protected DelayHandler mHandler;
     protected V vu;
-    protected static SwipeRefreshLayout mSwipeRefreshLayout;
+    public static PullRefreshLayout mSwipeRefreshLayout;
     protected Bundle mSaveInstanceBunder;
     protected static LinkedList<Activity> mActivityManager;
+    public static Map<String, PullRefreshLayout> mSwipeRefreshManager;
     protected SwipeBackLayout swipeBackLayout;
     private ExceptionLoingOutReceiver logOutReceiver;
 
@@ -59,11 +61,12 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         mSaveInstanceBunder = savedInstanceState;
         registerActivityLoginOut();
         if (mActivityManager == null) mActivityManager = new LinkedList<>();
+        if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
         mActivityManager.add(this);
 
         try {
             vu = getVuClass().newInstance();
-            vu.init(getLayoutInflater(), null);
+            vu.init(getLayoutInflater(),null, mContext);
             setContentView(vu.getView());
             onBindVu();
 
@@ -84,7 +87,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         trySetupSwipeRefresh();
-        updateSwipeRefreshProgressBarTop();
 
         View mainContent = findViewById(R.id.main_content);
         if (mainContent != null) {
@@ -96,21 +98,17 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     }
 
     private void trySetupSwipeRefresh() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshManager.put(getClass().getName(), mSwipeRefreshLayout);
         if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setColorSchemeResources(
-                    R.color.refresh_progress);
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
                 @Override
-                public void onRefresh() {
+                public void onRefreshing() {
                     requestDataRefresh();
                 }
             });
+            mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
 
-            if (mSwipeRefreshLayout instanceof MultiSwipeRefreshLayout) {
-                MultiSwipeRefreshLayout mswrl = (MultiSwipeRefreshLayout) mSwipeRefreshLayout;
-                mswrl.setCanChildScrollUpCallback(this);
-            }
         }
     }
 
@@ -124,37 +122,11 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         }, 250);
     }
 
+    // true：can not use swipeRefreshLayout scroll up false:otherwise
     protected static void onRefreshingStateChanged(boolean refreshing) {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(refreshing);
         }
-    }
-
-    private void updateSwipeRefreshProgressBarTop() {
-        if (mSwipeRefreshLayout == null) {
-            return;
-        }
-        int progressBarStartMargin = getResources().getDimensionPixelSize(
-                R.dimen.swipe_refresh_progress_bar_start_margin);
-        int progressBarEndMargin = getResources().getDimensionPixelSize(
-                R.dimen.swipe_refresh_progress_bar_end_margin);
-        int top = 0;
-        mSwipeRefreshLayout.setProgressViewOffset(false,
-                top + progressBarStartMargin, top + progressBarEndMargin);
-    }
-
-    // true：can not use swipeRefreshLayout scroll up false:otherwise
-    @Override
-    public boolean canSwipeRefreshChildScrollUp() {
-        return false;
-    }
-
-
-    // Press the back button in mobile phone
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
     }
 
  /*   @Override
@@ -192,16 +164,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         return false;
     }*/
 
-    public static void exit() {
-        try {
-            UtilTool.setVariablesNull();
-            finishAllActivities();
-            System.gc();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void registerActivityLoginOut() {
         logOutReceiver = new ExceptionLoingOutReceiver();
         IntentFilter filter = new IntentFilter("android.exception.ExceptionLoingOutReceiver");
@@ -220,6 +182,9 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     @Override
     protected void onResume() {
         super.onResume();
+        if (mSwipeRefreshManager.containsKey(getClass().getName())) {
+            mSwipeRefreshLayout = mSwipeRefreshManager.get(getClass().getName());
+        }
         afterResume();
     }
 
@@ -233,12 +198,41 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     protected void onDestroy() {
         beforeDestroy();
         vu = null;
-        mSwipeRefreshLayout = null;
-        mActivityManager.remove(this);
+        if (mSwipeRefreshManager != null && mSwipeRefreshManager.containsKey(getClass().getName()))
+            mSwipeRefreshManager.remove(getClass().getName());
+        if (mActivityManager != null && mActivityManager.contains(this))
+            mActivityManager.remove(this);
         unregisterReceiver(logOutReceiver);
         super.onDestroy();
     }
 
+
+    long firstTime = 0;
+    // Press the back button in mobile phone
+    @Override
+    public void onBackPressed() {
+        if(mActivityManager != null && mActivityManager.size() != 1) {
+            super.onBackPressed();
+        } else {
+            if (System.currentTimeMillis() - firstTime > 2000) {
+                firstTime = System.currentTimeMillis();
+                Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
+            } else {
+                exit();
+            }
+        }
+        overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
+    }
+
+    public static void exit() {
+        try {
+            UtilTool.setVariablesNull();
+            finishAllActivities();
+            System.gc();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     protected void onBindVu() {
     }

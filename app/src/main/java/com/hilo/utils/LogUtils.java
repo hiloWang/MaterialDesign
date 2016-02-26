@@ -16,9 +16,9 @@ public class LogUtils {
      */
     private static boolean DEBUG = MyApplication.mContext.getResources().getString(R.string.logcat).equals("true") ? true : false;
 
-    //false 表示取消打印Sinya 的测试log日志
-    private static String AUTHOR_SINYA = "hilo";
-    private static boolean SINYA_DEBUG = true;
+    //false 表示取消打印 的测试log日志
+    private static String AUTHOR = "hilo";
+    private static boolean IS_DEBUG = true;
 
     /**
      * @param tag 标签
@@ -34,7 +34,7 @@ public class LogUtils {
 
             if (tag == null || "".equals(tag.trim())) {
                 tag = className;
-            } else if (tag.equals(AUTHOR_SINYA) && !SINYA_DEBUG) {
+            } else if (tag.equals(AUTHOR) && !IS_DEBUG) {
                 return;
             }
 

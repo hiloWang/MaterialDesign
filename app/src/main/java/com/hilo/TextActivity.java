@@ -1,18 +1,28 @@
 package com.hilo;
 
-import android.os.Bundle;
+import android.app.Activity;
+import android.widget.Toast;
 
 import com.hilo.base.BasePresenterActivity;
 import com.hilo.vus.TextVu;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hilo on 16/2/24.
  */
 public class TextActivity extends BasePresenterActivity<TextVu> {
+    List<String> mData;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_text);
+    protected void onBindVu() {
+        mData = new ArrayList<>();
+        mData = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            mData.add("点我跳转activity，动画效果 <" + i + ">");
+        }
+        vu.setAdapterData(mData);
     }
 
     @Override
@@ -22,5 +32,6 @@ public class TextActivity extends BasePresenterActivity<TextVu> {
 
     @Override
     protected void onRefreshingListener() {
+        Toast.makeText(mContext, mContext.getClass().getName(), Toast.LENGTH_SHORT).show();
     }
 }

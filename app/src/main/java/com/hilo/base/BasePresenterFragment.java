@@ -52,7 +52,7 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
         View rootView = null;
         try {
             vu = getVuClass().newInstance();
-            vu.init(inflater, container);
+            vu.init(inflater, container, container.getContext());
             onBindVu();
             rootView = vu.getView();
         } catch (java.lang.InstantiationException e) {

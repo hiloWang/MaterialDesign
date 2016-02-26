@@ -1,5 +1,6 @@
 package com.hilo.vus;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -30,7 +31,7 @@ public class MainVu implements Vu {
     private TextView addView, delView;
 
     @Override
-    public void init(LayoutInflater inflater, ViewGroup container) {
+    public void init(LayoutInflater inflater, ViewGroup container, Context context) {
         rootView = inflater.inflate(R.layout.activity_main, null);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
 
@@ -92,5 +93,4 @@ public class MainVu implements Vu {
             vuCallBack.execute(-1);
         }
     }
-
 }

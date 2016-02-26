@@ -24,11 +24,6 @@ public class MainActivity extends BasePresenterActivity<MainVu>
         showFragment(RecyclerFragment.class);
     }
 
-//    @Override
-//    public boolean canSwipeRefreshChildScrollUp() {
-//        return super.canSwipeRefreshChildScrollUp();
-//    }
-
     @Override
     protected Class getVuClass() {
         return MainVu.class;
@@ -154,4 +149,6 @@ public class MainActivity extends BasePresenterActivity<MainVu>
     public Activity getActivityCallBacks() {
         return this;
     }
+
+
 }

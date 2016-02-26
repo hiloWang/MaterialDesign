@@ -19,9 +19,9 @@ public class UtilTool {
         BasePresenterActivity.mSwipeRefreshLayout = null;
     }
 
-
     /**
      * 判断当前应用是否处于debug状态
+     *
      * @param context
      * @return
      */

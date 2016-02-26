@@ -14,10 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hilo.MainActivity;
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
-import com.hilo.base.BasePresenterFragment;
 import com.hilo.interfaces.Vu;
 
 import java.util.List;
@@ -103,7 +101,7 @@ public class TextVu implements Vu {
 
             @Override
             public void onItemlongClick(View view, int position) {
-                    Toast.makeText(mContext, "当前点击了第" + position + "个条目", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "当前点击了第" + position + "个条目", Toast.LENGTH_SHORT).show();
             }
         });
     }

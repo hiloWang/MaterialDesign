@@ -15,7 +15,6 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.hilo.R;
-import com.hilo.dialog.actionsheet.NormalDialog;
 import com.hilo.interfaces.Vu;
 import com.hilo.others.pulltorefresh.PullRefreshLayout;
 import com.hilo.receiver.ExceptionLoingOutReceiver;
@@ -43,10 +42,10 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     protected SwipeBackLayout swipeBackLayout;
     private ExceptionLoingOutReceiver logOutReceiver;
 
-    private static boolean isExitApp;
     private static final int MAIN_CONTENT_FADEIN_DURATION = 250;
-    private NormalDialog exitDialog;
     private static final int DELAY_BACK_ACTIVITY = 0x001;
+    private long LAST_CLICK_TIME = 0;
+    private long MIN_CLICK_DELAY_TIME = 2000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
                 R.layout.activity_swipebackbase, null);
         swipeBackLayout.attachToActivity(this);
         mContext = this;
-        mHandler = new DelayHandler(this);
+//        mHandler = new DelayHandler(this);
         mSaveInstanceBunder = savedInstanceState;
         registerActivityLoginOut();
         if (mActivityManager == null) mActivityManager = new LinkedList<>();
@@ -66,7 +65,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
 
         try {
             vu = getVuClass().newInstance();
-            vu.init(getLayoutInflater(),null, mContext);
+            vu.init(getLayoutInflater(), null, mContext);
             setContentView(vu.getView());
             onBindVu();
 
@@ -178,7 +177,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         mActivityManager = null;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -206,22 +204,20 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         super.onDestroy();
     }
 
-
-    long firstTime = 0;
     // Press the back button in mobile phone
     @Override
     public void onBackPressed() {
-        if(mActivityManager != null && mActivityManager.size() != 1) {
+        if (mActivityManager != null && mActivityManager.size() != 1) {
             super.onBackPressed();
+            overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
         } else {
-            if (System.currentTimeMillis() - firstTime > 2000) {
-                firstTime = System.currentTimeMillis();
+            if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
+                LAST_CLICK_TIME = System.currentTimeMillis();
                 Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
             } else {
                 exit();
             }
         }
-        overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
     }
 
     public static void exit() {
@@ -264,7 +260,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
             if (mActivity != null) {
                 switch (msg.what) {
                     case DELAY_BACK_ACTIVITY:
-                        isExitApp = false;
                         break;
                 }
             }

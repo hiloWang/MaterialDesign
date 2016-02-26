@@ -1,6 +1,5 @@
 package com.hilo;
 
-import android.app.Activity;
 import android.widget.Toast;
 
 import com.hilo.base.BasePresenterActivity;

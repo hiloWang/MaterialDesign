@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hilo.MainActivity;
 import com.hilo.R;
 import com.hilo.TextActivity;
+import com.hilo.interfaces.OnNoDoubleClickListener;
 import com.hilo.utils.LogUtils;
 import com.squareup.picasso.Picasso;
 
@@ -44,9 +46,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public interface RecyclerViewOnItemClickListener {
         void onItemClick(View view, int position);
+
         void onItemlongClick(View view, int position);
     }
+
     private RecyclerViewOnItemClickListener recyclerViewOnItemClickListener;
+
     public void setRecyclerViewOnItemClickListener(RecyclerViewOnItemClickListener listener) {
         recyclerViewOnItemClickListener = listener;
     }
@@ -58,7 +63,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final RecyclerAdapter.ViewHolder holder, int position) {
-        if(recyclerViewOnItemClickListener != null) {
+        if (recyclerViewOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -113,10 +118,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             mTv1 = (TextView) itemView.findViewById(R.id.item_1);
             mImage = (ImageView) itemView.findViewById(R.id.image);
 
-            mTv1.setOnClickListener(new View.OnClickListener() {
+            mTv1.setOnClickListener(new OnNoDoubleClickListener() {
                 @Override
-                public void onClick(View v) {
-                    if(!mContext.getClass().getName().equals("com.hilo.TextActivity")) {
+                protected void onNoDoubleClickListener(View v) {
+                    if (!mContext.getClass().getName().equals("com.hilo.TextActivity")) {
                         Intent intent = new Intent(mContext, TextActivity.class);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             ((MainActivity) mContext).getWindow().setExitTransition(new TransitionSet());
@@ -124,6 +129,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         } else {
                             mContext.startActivity(intent);
                         }
+                    } else {
+                        Toast.makeText(mContext, "不可重复跳转当前Activity", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

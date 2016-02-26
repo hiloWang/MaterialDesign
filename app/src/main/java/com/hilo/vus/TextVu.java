@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
 import com.hilo.interfaces.Vu;
+import com.hilo.utils.AnimUtils;
+import com.hilo.utils.UIUtils;
 
 import java.util.List;
 
@@ -67,6 +69,7 @@ public class TextVu implements Vu {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mAdapter.getItemCount()) {
                         // 当滚动到最后一条时的逻辑处理
+                        Toast.makeText(mContext, "没有数据可加载", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -95,8 +98,18 @@ public class TextVu implements Vu {
                     animator.setInterpolator(new AccelerateInterpolator());
                     animator.setDuration(500);
                     animator.start();
+
+                    animator = ViewAnimationUtils.createCircularReveal(
+                            tv,
+                            0,
+                            0,
+                            0,
+                            (float) Math.hypot(tv.getWidth(), tv.getHeight()));
+                    animator.setInterpolator(new AccelerateInterpolator());
+                    animator.setDuration(500);
+                    animator.start();
                 }
-                tv.setText("长按Item可触发事件");
+                tv.setText("长按Item可触发longClick事件监听");
             }
 
             @Override

@@ -65,7 +65,7 @@ public class TextVu implements Vu {
         VuEventFactory vuEventFactory = new CreateVuSubClass();
         IVuEvents.createVus v = vuEventFactory.createVus(AllVuEventsManagerIml.class);
         try {
-            v.createVus(this);
+            v.setupVu(this);
         } catch (InvalidVuException e) {
             e.printStackTrace();
         }

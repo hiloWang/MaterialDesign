@@ -9,6 +9,6 @@ import com.hilo.others.InvalidVuException;
 public abstract class IVuEvents {
 
     public interface createVus {
-        IVuEvents createVus(Vu vu) throws InvalidVuException;
+        IVuEvents setupVu(Vu vu) throws InvalidVuException;
     }
 }

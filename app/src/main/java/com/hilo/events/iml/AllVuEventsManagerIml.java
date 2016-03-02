@@ -11,7 +11,7 @@ import com.hilo.vus.TextVu;
 public class AllVuEventsManagerIml implements IVuEvents.createVus {
 
         @Override
-        public IVuEvents createVus(Vu vu) throws InvalidVuException {
+        public IVuEvents setupVu(Vu vu) throws InvalidVuException {
             if (vu instanceof RecyclerFragmentVu) {
                 return new RecyclerFragmentVuEvents((RecyclerFragmentVu) vu);
             } else if (vu instanceof TextVu) {

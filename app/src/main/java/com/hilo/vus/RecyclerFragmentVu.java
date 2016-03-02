@@ -39,7 +39,6 @@ public class RecyclerFragmentVu implements Vu {
     public void init(LayoutInflater inflater, ViewGroup container, final Context context) {
         initViews(inflater, container, context);
         initEvents();
-
     }
 
     @Override
@@ -69,7 +68,7 @@ public class RecyclerFragmentVu implements Vu {
         VuEventFactory factory = new CreateVuSubClass();
         IVuEvents.createVus vus = factory.createVus(AllVuEventsManagerIml.class);
         try {
-            vus.createVus(this);
+            vus.setupVu(this);
         } catch (InvalidVuException e) {
             e.printStackTrace();
         }

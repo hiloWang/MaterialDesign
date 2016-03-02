@@ -50,19 +50,16 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
 
     @Override
     protected void onCreateInitViews() {
-        mData = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            mData.add("点我跳转activity，动画效果 <" + i + ">");
-        }
-        ((MainActivity) mContext).setOnRefreshingCallback(mOnRefreshCallBack);
+        initData();
     }
+
 
     @Override
     protected void onBindVu() {
         vu.setLongClickCallBack(mCallbacks);
+        ((MainActivity) mContext).setOnRefreshingCallback(mOnRefreshCallBack);
         ((MainActivity) mContext).setDelDataCallback(mDelDataCallback);
         ((MainActivity) mContext).setAddDataCallback(mAddDataCallback);
-
         vu.setAdapterData(mData);
     }
 
@@ -74,5 +71,13 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
     @Override
     protected Class<RecyclerFragmentVu> getVuClass() {
         return RecyclerFragmentVu.class;
+    }
+
+
+    private void initData() {
+        mData = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            mData.add("点我跳转activity，动画效果 <" + i + ">");
+        }
     }
 }

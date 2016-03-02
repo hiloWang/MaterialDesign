@@ -1,15 +1,12 @@
 package com.hilo.vus;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +15,6 @@ import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
 import com.hilo.interfaces.Vu;
 import com.hilo.utils.AnimUtils;
-import com.hilo.utils.UIUtils;
 
 import java.util.List;
 
@@ -87,27 +83,9 @@ public class TextVu implements Vu {
             public void onItemClick(View view, int position) {
                 TextView tv = (TextView) view.findViewById(R.id.item_1);
                 ImageView mImage = (ImageView) view.findViewById(R.id.image);
-                Animator animator;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    animator = ViewAnimationUtils.createCircularReveal(
-                            mImage,
-                            0,
-                            0,
-                            0,
-                            (float) Math.hypot(mImage.getWidth(), mImage.getHeight()));
-                    animator.setInterpolator(new AccelerateInterpolator());
-                    animator.setDuration(500);
-                    animator.start();
-
-                    animator = ViewAnimationUtils.createCircularReveal(
-                            tv,
-                            0,
-                            0,
-                            0,
-                            (float) Math.hypot(tv.getWidth(), tv.getHeight()));
-                    animator.setInterpolator(new AccelerateInterpolator());
-                    animator.setDuration(500);
-                    animator.start();
+                    AnimUtils.attrCreateCircularReveal(mImage, 500);
+                    AnimUtils.attrCreateCircularReveal(tv, 2000);
                 }
                 tv.setText("长按Item可触发longClick事件监听");
             }

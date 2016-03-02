@@ -2,13 +2,17 @@ package com.hilo.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -17,6 +21,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.hilo.R;
 
@@ -254,4 +259,22 @@ public class AnimUtils {
         view.startAnimation(animation);
     }
 
+    /**
+     * 烧纸
+     * @param animator
+     * @param v
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static Animator attrCreateCircularReveal(View v, int duration) {
+        Animator animator = ViewAnimationUtils.createCircularReveal(
+                v,
+                0,
+                0,
+                0,
+                (float) Math.hypot(v.getWidth(), v.getHeight()));
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setDuration(duration);
+        animator.start();
+        return animator;
+    }
 }

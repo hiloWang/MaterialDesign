@@ -11,9 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hilo.R;
+import com.hilo.interfaces.OnNoDoubleClickListener;
 import com.hilo.interfaces.Vu;
 import com.hilo.interfaces.VuCallBack;
 
@@ -29,6 +31,7 @@ public class MainVu implements Vu {
     private FloatingActionButton fab;
 
     private TextView addView, delView;
+    private ImageButton createView;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, Context context) {
@@ -47,6 +50,8 @@ public class MainVu implements Vu {
         navigationView = (NavigationView) rootView.findViewById(R.id.nav_view);
         delView = (TextView) rootView.findViewById(R.id.del);
         addView = (TextView) rootView.findViewById(R.id.add);
+        createView = (ImageButton) rootView.findViewById(R.id.icon_create);
+
     }
 
     @Override
@@ -87,6 +92,18 @@ public class MainVu implements Vu {
             }
         });
     }
+
+    public void setPopupWindowCallBack(final VuCallBack<View> vuCallBack) {
+        createView.setOnClickListener(new OnNoDoubleClickListener() {
+            @Override
+            protected void onNoDoubleClickListener(View v) {
+                if (vuCallBack != null) {
+                    vuCallBack.execute(createView);
+                }
+            }
+        });
+    }
+
 
     public void setRefreshCallBack(VuCallBack<Integer> vuCallBack) {
         if (vuCallBack != null) {

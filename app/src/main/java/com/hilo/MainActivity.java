@@ -1,27 +1,42 @@
 package com.hilo;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.hilo.adapter.PopupAdapter;
 import com.hilo.base.BasePresenterActivity;
 import com.hilo.base.BasePresenterFragment;
 import com.hilo.fragment.RecyclerFragment;
 import com.hilo.interfaces.VuCallBack;
+import com.hilo.utils.UIUtils;
 import com.hilo.vus.MainVu;
 
 public class MainActivity extends BasePresenterActivity<MainVu>
         implements NavigationView.OnNavigationItemSelectedListener, BasePresenterFragment.Callbacks {
 
+    private PopupWindow popupWindow;
+
     @Override
     protected void onBindVu() {
         vu.setAppCompatActivity(this);
-        showFragment(RecyclerFragment.class);
+//        vu.setPopupWindowCallBack(mPopupWindowCallBack);
+        initFragment(RecyclerFragment.class);
     }
 
     @Override
@@ -49,7 +64,44 @@ public class MainActivity extends BasePresenterActivity<MainVu>
         vu.setAddDataCallBack(vuCallBack);
     }
 
-    private <T extends Fragment> void showFragment(Class<T> clzz) {
+    VuCallBack<View> mPopupWindowCallBack = new VuCallBack<View>() {
+        @Override
+        public void execute(View v) {
+            WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            int x = wm.getDefaultDisplay().getWidth() / 4;
+            int y = v.getBottom() * 3 / 2;
+            View rootView = LayoutInflater.from(mContext).inflate(R.layout.popup_create_listview, null);
+            ListView mPopupListView = (ListView) rootView.findViewById(R.id.popup_listview);
+            mPopupListView.setAdapter(new PopupAdapter(mContext));
+            popupWindow = new PopupWindow(mContext);
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+            popupWindow.setWidth((int) (wm.getDefaultDisplay().getWidth() * 3.5 / 10));
+            popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+            popupWindow.setContentView(rootView);
+            popupWindow.setAnimationStyle(R.style.popupCreateAnimation);
+            popupWindow.showAtLocation(v, Gravity.LEFT|Gravity.TOP, (int) (wm.getDefaultDisplay().getWidth() * 6.4 / 10), y + UIUtils.dpToPx(4, getResources()));
+
+            mPopupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    switch (position) {
+                        case 0:
+                            Toast.makeText(mContext, "点击了第"+position+"个条目", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    popupWindow.dismiss();
+                    popupWindow = null;
+                }
+            });
+        }
+    };
+
+
+
+    private <T extends Fragment> void initFragment(Class<T> clzz) {
         RecyclerFragment mRecyclerFragment = RecyclerFragment.getInstance();
         try {
             if (mRecyclerFragment == null) {
@@ -105,7 +157,6 @@ public class MainActivity extends BasePresenterActivity<MainVu>
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -149,6 +200,4 @@ public class MainActivity extends BasePresenterActivity<MainVu>
     public Activity getActivityCallBacks() {
         return this;
     }
-
-
 }

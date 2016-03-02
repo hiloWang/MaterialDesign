@@ -52,16 +52,8 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         LogUtils.I(BasePresenterActivity.class.getName());
-        swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
-                R.layout.activity_swipebackbase, null);
-        swipeBackLayout.attachToActivity(this);
-        mContext = this;
-//        mHandler = new DelayHandler(this);
-        mSaveInstanceBunder = savedInstanceState;
-        registerActivityLoginOut();
-        if (mActivityManager == null) mActivityManager = new LinkedList<>();
-        if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
-        mActivityManager.add(this);
+
+        initViews(savedInstanceState);
 
         try {
             vu = getVuClass().newInstance();
@@ -74,6 +66,19 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initViews(Bundle savedInstanceState) {
+        swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
+                R.layout.activity_swipebackbase, null);
+        mContext = this;
+        mSaveInstanceBunder = savedInstanceState;
+        swipeBackLayout.attachToActivity(this);
+//        mHandler = new DelayHandler(this);
+        registerActivityLoginOut();
+        if (mActivityManager == null) mActivityManager = new LinkedList<>();
+        if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
+        mActivityManager.add(this);
     }
 
     @Override
@@ -96,6 +101,44 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSwipeRefreshManager.containsKey(getClass().getName())) {
+            mSwipeRefreshLayout = mSwipeRefreshManager.get(getClass().getName());
+        }
+        afterResume();
+    }
+
+    @Override
+    protected void onPause() {
+        beforePause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        beforeDestroy();
+        repleaseResources();
+        super.onDestroy();
+    }
+
+    // Press the back button in mobile phone
+    @Override
+    public void onBackPressed() {
+        if (mActivityManager != null && mActivityManager.size() != 1) {
+            super.onBackPressed();
+            overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
+        } else {
+            if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
+                LAST_CLICK_TIME = System.currentTimeMillis();
+                Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
+            } else {
+                exit();
+            }
+        }
+    }
+
     private void trySetupSwipeRefresh() {
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshManager.put(getClass().getName(), mSwipeRefreshLayout);
@@ -107,7 +150,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
                 }
             });
             mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
-
         }
     }
 
@@ -177,49 +219,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         mActivityManager = null;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mSwipeRefreshManager.containsKey(getClass().getName())) {
-            mSwipeRefreshLayout = mSwipeRefreshManager.get(getClass().getName());
-        }
-        afterResume();
-    }
-
-    @Override
-    protected void onPause() {
-        beforePause();
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        beforeDestroy();
-        vu = null;
-        if (mSwipeRefreshManager != null && mSwipeRefreshManager.containsKey(getClass().getName()))
-            mSwipeRefreshManager.remove(getClass().getName());
-        if (mActivityManager != null && mActivityManager.contains(this))
-            mActivityManager.remove(this);
-        unregisterReceiver(logOutReceiver);
-        super.onDestroy();
-    }
-
-    // Press the back button in mobile phone
-    @Override
-    public void onBackPressed() {
-        if (mActivityManager != null && mActivityManager.size() != 1) {
-            super.onBackPressed();
-            overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
-        } else {
-            if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
-                LAST_CLICK_TIME = System.currentTimeMillis();
-                Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
-            } else {
-                exit();
-            }
-        }
-    }
-
     public static void exit() {
         try {
             UtilTool.setVariablesNull();
@@ -228,6 +227,15 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void repleaseResources() {
+        vu = null;
+        if (mSwipeRefreshManager != null && mSwipeRefreshManager.containsKey(getClass().getName()))
+            mSwipeRefreshManager.remove(getClass().getName());
+        if (mActivityManager != null && mActivityManager.contains(this))
+            mActivityManager.remove(this);
+        unregisterReceiver(logOutReceiver);
     }
 
     protected void onBindVu() {

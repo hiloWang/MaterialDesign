@@ -28,7 +28,7 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> mData;
+    private List<String> data;
     private final static int[] colors = new int[]{R.color.design_bgcolor};
 
     public RecyclerAdapter(Context mContext) {
@@ -37,11 +37,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public RecyclerAdapter(Context mContext, List<String> data) {
         this.mContext = mContext;
-        mData = data;
+        this.data = data;
     }
 
     public void setData(List<String> data) {
-        mData = data;
+        this.data = data;
     }
 
     public interface RecyclerViewOnItemClickListener {
@@ -63,6 +63,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final RecyclerAdapter.ViewHolder holder, int position) {
+        initEvents(holder);
+        holder.bindData(data, mContext.getResources().getColor(colors[position % colors.length]), position);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.itemView.clearAnimation();
+    }
+
+    @Override
+    public int getItemCount() {
+        if (data != null && data.size() > 0)
+            return data.size();
+        return 0;
+    }
+
+    private void initEvents(final ViewHolder holder) {
         if (recyclerViewOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,29 +99,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             });
         }
-        holder.bindData(mData, mContext.getResources().getColor(colors[position % colors.length]), position);
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        holder.itemView.clearAnimation();
-    }
-
-    @Override
-    public int getItemCount() {
-        if (mData != null && mData.size() > 0)
-            return mData.size();
-        return 0;
     }
 
     public void add(String text, int position) {
-        mData.add(position, text);
+        data.add(position, text);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        mData.remove(position);
+        data.remove(position);
         notifyItemRemoved(position);
     }
 

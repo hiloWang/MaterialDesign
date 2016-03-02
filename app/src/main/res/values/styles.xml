@@ -41,4 +41,10 @@
         <style name="custom_textview_style">
             <item name="ctv_textViewWidth">100dp</item>
         </style>
+
+    <!-- popupWindow Animation -->
+    <style name="popupCreateAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/scale_in</item>
+        <item name="android:windowExitAnimation">@anim/scale_out</item>
+    </style>
 </resources>

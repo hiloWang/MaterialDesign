@@ -41,9 +41,11 @@ public class RecyclerFragmentVuEvents {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == vuInstance.mAdapter.getItemCount()) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == vuInstance.adapter.getItemCount()) {
                         // 当滚动到最后一条时的逻辑处理
                         Toast.makeText(vuInstance.mContext, "没有数据可加载", Toast.LENGTH_SHORT).show();
+                    } else if (vuInstance.mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
+
                     }
                 }
 
@@ -58,7 +60,7 @@ public class RecyclerFragmentVuEvents {
     }
 
     public void setOnItemClickListener(final RecyclerFragmentVu vuInstance) {
-        vuInstance.mAdapter.setRecyclerViewOnItemClickListener(new RecyclerAdapter.RecyclerViewOnItemClickListener() {
+        vuInstance.adapter.setRecyclerViewOnItemClickListener(new RecyclerAdapter.RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 TextView tv = (TextView) view.findViewById(R.id.item_1);

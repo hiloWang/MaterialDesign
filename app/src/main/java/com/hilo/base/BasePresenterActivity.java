@@ -141,8 +141,8 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
 
     private void trySetupSwipeRefresh() {
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshManager.put(getClass().getName(), mSwipeRefreshLayout);
         if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshManager.put(getClass().getName(), mSwipeRefreshLayout);
             mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefreshing() {

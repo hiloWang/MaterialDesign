@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
@@ -13,12 +14,10 @@ import com.hilo.base.BasePresenterFragment;
 import com.hilo.events.RecyclerFragmentVuEvents;
 import com.hilo.interfaces.Vu;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 
 /**
  * Created by hilo on 16/2/25.
@@ -28,7 +27,7 @@ public class RecyclerFragmentVu implements Vu {
     public Context mContext;
     public View rootView;
     public RecyclerView mRecyclerView;
-    public RecyclerAdapter mAdapter;
+    public RecyclerAdapter adapter;
     public LinearLayoutManager mLinearLayoutManager;
 
     public BasePresenterFragment.Callbacks mCallbacks;
@@ -54,15 +53,12 @@ public class RecyclerFragmentVu implements Vu {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycleView);
         mLinearLayoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setItemAnimator(new FadeInAnimator());
-        mAdapter = new RecyclerAdapter(container.getContext());
-//        mRecyclerView.getItemAnimator().setAddDuration(500);
-//        mRecyclerView.getItemAnimator().setRemoveDuration(500);
-        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(mAdapter);
+        adapter = new RecyclerAdapter(container.getContext());
+        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
         ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
-//        scaleAdapter.setFirstOnly(false);
-//        scaleAdapter.setInterpolator(new OvershootInterpolator());
-        mRecyclerView.setAdapter(mAdapter);
+        scaleAdapter.setFirstOnly(false);
+        scaleAdapter.setInterpolator(new OvershootInterpolator());
+        mRecyclerView.setAdapter(scaleAdapter);
     }
 
     private void initEvents() {
@@ -79,16 +75,16 @@ public class RecyclerFragmentVu implements Vu {
     }
 
     public void setAdapterData(List<String> data) {
-        mAdapter.setData(data);
+        adapter.setData(data);
     }
 
     public void setDelData(int position) {
-        if (mAdapter.getItemCount() > position)
-            mAdapter.remove(position);
+        if (adapter.getItemCount() > position)
+            adapter.remove(position);
     }
 
     public void setAddData(String msg, int position) {
-        if (mAdapter.getItemCount() > position)
-            mAdapter.add(msg, position);
+        if (adapter.getItemCount() > position)
+            adapter.add(msg, position);
     }
 }

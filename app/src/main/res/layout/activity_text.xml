@@ -23,16 +23,11 @@
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/fragmentContainer"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycleView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"/>
         </com.hilo.others.pulltorefresh.PullRefreshLayout>
     </RelativeLayout>
 </RelativeLayout>

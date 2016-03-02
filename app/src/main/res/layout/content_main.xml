@@ -20,15 +20,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.hilo.others.pulltorefresh.PullRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </FrameLayout>
-    </com.hilo.others.pulltorefresh.PullRefreshLayout>
 </RelativeLayout>
 </LinearLayout>

@@ -20,7 +20,6 @@ import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 
 /**
  * Created by hilo on 16/2/25.
@@ -42,9 +41,6 @@ public class TextVu implements Vu {
         mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new RecyclerAdapter(context);
-        mRecyclerView.setItemAnimator(new FadeInAnimator());
-//        mRecyclerView.getItemAnimator().setAddDuration(500);
-//        mRecyclerView.getItemAnimator().setRemoveDuration(500);
         AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(mAdapter);
         ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
 //        scaleAdapter.setFirstOnly(false);

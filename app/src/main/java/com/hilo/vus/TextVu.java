@@ -1,20 +1,20 @@
 package com.hilo.vus;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
+import com.hilo.events.factory.CreateVuSubClass;
+import com.hilo.events.factory.VuEventFactory;
+import com.hilo.events.interfaces.IVuEvents;
+import com.hilo.events.iml.AllVuEventsManagerIml;
 import com.hilo.interfaces.Vu;
-import com.hilo.utils.AnimUtils;
+import com.hilo.others.InvalidVuException;
 
 import java.util.List;
 
@@ -26,15 +26,28 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
  */
 public class TextVu implements Vu {
 
-    private View rootView;
-    private Context mContext;
-    private RecyclerView mRecyclerView;
-    private RecyclerAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private int lastVisibleItem;
+    public View rootView;
+    public Context mContext;
+    public RecyclerView mRecyclerView;
+    public RecyclerAdapter mAdapter;
+    public LinearLayoutManager mLinearLayoutManager;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, Context context) {
+        initViews(inflater, container, context);
+        initEvents();
+    }
+
+    @Override
+    public View getView() {
+        return rootView;
+    }
+
+    public void setAdapterData(List<String> data) {
+        mAdapter.setData(data);
+    }
+
+    private void initViews(LayoutInflater inflater, ViewGroup container, Context context) {
         mContext = context;
         rootView = inflater.inflate(R.layout.activity_text, null);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycleView);
@@ -46,59 +59,15 @@ public class TextVu implements Vu {
 //        scaleAdapter.setFirstOnly(false);
 //        scaleAdapter.setInterpolator(new OvershootInterpolator());
         mRecyclerView.setAdapter(scaleAdapter);
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mRecyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                }
-            });
-        } else {
-            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mAdapter.getItemCount()) {
-                        // 当滚动到最后一条时的逻辑处理
-                        Toast.makeText(mContext, "没有数据可加载", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if (mRecyclerView != null && mRecyclerView.getChildCount() > 0)
-                        lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
-                }
-            });
+    private void initEvents() {
+        VuEventFactory vuEventFactory = new CreateVuSubClass();
+        IVuEvents.createVus v = vuEventFactory.createVus(AllVuEventsManagerIml.class);
+        try {
+            v.createVus(this);
+        } catch (InvalidVuException e) {
+            e.printStackTrace();
         }
-
-        mAdapter.setRecyclerViewOnItemClickListener(new RecyclerAdapter.RecyclerViewOnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                TextView tv = (TextView) view.findViewById(R.id.item_1);
-                ImageView mImage = (ImageView) view.findViewById(R.id.image);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    AnimUtils.attrCreateCircularReveal(mImage, 500);
-                    AnimUtils.attrCreateCircularReveal(tv, 2000);
-                }
-                tv.setText("长按Item可触发longClick事件监听");
-            }
-
-            @Override
-            public void onItemlongClick(View view, int position) {
-                Toast.makeText(mContext, "当前点击了第" + position + "个条目", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public View getView() {
-        return rootView;
-    }
-
-    public void setAdapterData(List<String> data) {
-        mAdapter.setData(data);
     }
 }

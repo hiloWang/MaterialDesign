@@ -11,8 +11,12 @@ import android.view.animation.OvershootInterpolator;
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
 import com.hilo.base.BasePresenterFragment;
-import com.hilo.events.RecyclerFragmentVuEvents;
+import com.hilo.events.factory.CreateVuSubClass;
+import com.hilo.events.factory.VuEventFactory;
+import com.hilo.events.interfaces.IVuEvents;
+import com.hilo.events.iml.AllVuEventsManagerIml;
 import com.hilo.interfaces.Vu;
+import com.hilo.others.InvalidVuException;
 
 import java.util.List;
 
@@ -29,13 +33,13 @@ public class RecyclerFragmentVu implements Vu {
     public RecyclerView mRecyclerView;
     public RecyclerAdapter adapter;
     public LinearLayoutManager mLinearLayoutManager;
-
     public BasePresenterFragment.Callbacks mCallbacks;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, final Context context) {
         initViews(inflater, container, context);
         initEvents();
+
     }
 
     @Override
@@ -62,16 +66,13 @@ public class RecyclerFragmentVu implements Vu {
     }
 
     private void initEvents() {
-        recyclerViewEvent();
-        adapterEvent();
-    }
-
-    private void recyclerViewEvent() {
-        RecyclerFragmentVuEvents.getDefaultRecyclerViewManager().setOnScrollChangeListener(this);
-    }
-
-    private void adapterEvent() {
-        RecyclerFragmentVuEvents.getDefaultRecyclerViewManager().setOnItemClickListener(this);
+        VuEventFactory factory = new CreateVuSubClass();
+        IVuEvents.createVus vus = factory.createVus(AllVuEventsManagerIml.class);
+        try {
+            vus.createVus(this);
+        } catch (InvalidVuException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setAdapterData(List<String> data) {

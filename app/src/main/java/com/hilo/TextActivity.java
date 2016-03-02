@@ -16,11 +16,7 @@ public class TextActivity extends BasePresenterActivity<TextVu> {
 
     @Override
     protected void onBindVu() {
-        mData = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            mData.add("点我跳转activity，动画效果 <" + i + ">");
-        }
-        vu.setAdapterData(mData);
+        initData();
     }
 
     @Override
@@ -31,5 +27,13 @@ public class TextActivity extends BasePresenterActivity<TextVu> {
     @Override
     protected void onRefreshingListener() {
         Toast.makeText(mContext, mContext.getClass().getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void initData() {
+        mData = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            mData.add("点我跳转activity，动画效果 <" + i + ">");
+        }
+        vu.setAdapterData(mData);
     }
 }

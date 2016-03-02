@@ -1,30 +1,19 @@
 package com.hilo;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.hilo.adapter.PopupAdapter;
 import com.hilo.base.BasePresenterActivity;
 import com.hilo.base.BasePresenterFragment;
 import com.hilo.fragment.RecyclerFragment;
 import com.hilo.interfaces.VuCallBack;
-import com.hilo.utils.UIUtils;
 import com.hilo.vus.MainVu;
 
 public class MainActivity extends BasePresenterActivity<MainVu>
@@ -50,7 +39,7 @@ public class MainActivity extends BasePresenterActivity<MainVu>
             vu.setRefreshCallBack(mRefreshingCallback);
     }
 
-    VuCallBack<Integer> mRefreshingCallback;
+    private VuCallBack<Integer> mRefreshingCallback;
 
     public void setOnRefreshingCallback(VuCallBack<Integer> vuCallBack) {
         mRefreshingCallback = vuCallBack;
@@ -64,7 +53,7 @@ public class MainActivity extends BasePresenterActivity<MainVu>
         vu.setAddDataCallBack(vuCallBack);
     }
 
-    VuCallBack<View> mPopupWindowCallBack = new VuCallBack<View>() {
+    /*VuCallBack<View> mPopupWindowCallBack = new VuCallBack<View>() {
         @Override
         public void execute(View v) {
             WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -84,7 +73,7 @@ public class MainActivity extends BasePresenterActivity<MainVu>
             popupWindow.setAnimationStyle(R.style.popupCreateAnimation);
             popupWindow.showAtLocation(v, Gravity.LEFT|Gravity.TOP, (int) (wm.getDefaultDisplay().getWidth() * 6.4 / 10), y + UIUtils.dpToPx(4, getResources()));
 
-            mPopupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mPopupListView.setRecyclerOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     switch (position) {
@@ -97,9 +86,7 @@ public class MainActivity extends BasePresenterActivity<MainVu>
                 }
             });
         }
-    };
-
-
+    };*/
 
     private <T extends Fragment> void initFragment(Class<T> clzz) {
         RecyclerFragment mRecyclerFragment = RecyclerFragment.getInstance();

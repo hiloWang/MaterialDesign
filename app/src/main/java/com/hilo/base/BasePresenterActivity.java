@@ -8,8 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -27,10 +32,13 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by hilo on 16/2/24.
  */
-public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActivity {
+public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     protected Context mContext;
     protected DelayHandler mHandler;
@@ -41,11 +49,14 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     public static Map<String, PullRefreshLayout> mSwipeRefreshManager;
     protected SwipeBackLayout swipeBackLayout;
     private ExceptionLoingOutReceiver logOutReceiver;
+    protected MenuItem settingsMenuItem;
 
     private static final int MAIN_CONTENT_FADEIN_DURATION = 250;
     private static final int DELAY_BACK_ACTIVITY = 0x001;
     private long LAST_CLICK_TIME = 0;
     private long MIN_CLICK_DELAY_TIME = 2000;
+
+    protected boolean pendingIntroAnimation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +77,12 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
+        if (savedInstanceState == null) {
+            pendingIntroAnimation = true;
+        } else {
+            updateItems(false);
+        }
     }
 
     @Override
@@ -73,6 +90,59 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         super.startActivity(intent);
         overridePendingTransition(R.anim.activity_swipeback_slide_right_in, R.anim.activity_swipeback_slide_remain);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        settingsMenuItem = menu.findItem(R.id.action_settings);
+        settingsMenuItem.setActionView(R.layout.menu_item_view);
+        if (pendingIntroAnimation) {
+            pendingIntroAnimation = false;
+            startIntroAnimation();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -127,6 +197,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     }
 
     private void initViews(Bundle savedInstanceState) {
+        ButterKnife.bind(this);
         swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.activity_swipebackbase, null);
         mContext = this;
@@ -253,6 +324,15 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     protected abstract Class<V> getVuClass();
 
     protected abstract void onRefreshingListener();
+
+    protected abstract void startIntroAnimation();
+
+    protected void updateItems(boolean animated) {};
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
     private static class DelayHandler extends Handler {
         private final WeakReference<BasePresenterActivity> weakReference;

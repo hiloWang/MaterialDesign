@@ -13,13 +13,15 @@ import com.hilo.adapter.RecyclerAdapter;
 import com.hilo.base.BasePresenterFragment;
 import com.hilo.events.factory.CreateVuSubClass;
 import com.hilo.events.factory.VuEventFactory;
-import com.hilo.events.interfaces.IVuEvents;
 import com.hilo.events.iml.AllVuEventsManagerIml;
+import com.hilo.events.interfaces.IVuEvents;
 import com.hilo.interfaces.Vu;
 import com.hilo.others.InvalidVuException;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
@@ -30,10 +32,11 @@ public class RecyclerFragmentVu implements Vu {
 
     public Context mContext;
     public View rootView;
-    public RecyclerView mRecyclerView;
     public RecyclerAdapter adapter;
     public LinearLayoutManager mLinearLayoutManager;
     public BasePresenterFragment.Callbacks mCallbacks;
+    @Bind(R.id.recyclerView)
+    public RecyclerView mRecyclerView;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, final Context context) {
@@ -53,7 +56,7 @@ public class RecyclerFragmentVu implements Vu {
     private void initViews(LayoutInflater inflater, ViewGroup container, Context context) {
         mContext = context;
         rootView = inflater.inflate(R.layout.textactivity_recycleview, container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycleView);
+        ButterKnife.bind(this, rootView);
         mLinearLayoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         adapter = new RecyclerAdapter(container.getContext());
@@ -86,5 +89,9 @@ public class RecyclerFragmentVu implements Vu {
     public void setAddData(String msg, int position) {
         if (adapter.getItemCount() > position)
             adapter.add(msg, position);
+    }
+
+    public void updateItems(boolean animated) {
+        adapter.updateItems(animated);
     }
 }

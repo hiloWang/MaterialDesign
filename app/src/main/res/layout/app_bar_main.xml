@@ -29,7 +29,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
                     android:layout_marginRight="12dp"
-                    android:src="@mipmap/icon_create" />
+                    android:src="@mipmap/icon_create"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/del"

@@ -36,5 +36,9 @@
     <color name="design_bgcolor">#efefef</color>
 
     <color name="design_text_bgcolor">#f8f9fa</color>
+    <color name="btn_default_light_pressed">#40ffffff</color>
+    <color name="btn_default_light_normal">#00000000</color>
+
+    <color name="toolbar_color">#3DC49D</color>
 
 </resources>

@@ -59,7 +59,7 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         ((MainActivity) mContext).setOnRefreshingCallback(mOnRefreshCallBack);
         ((MainActivity) mContext).setDelDataCallback(mDelDataCallback);
         ((MainActivity) mContext).setAddDataCallback(mAddDataCallback);
-        vu.setAdapterData(data);
+//        vu.setAdapterData(data);
     }
 
     @Override
@@ -77,5 +77,9 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         for (int i = 0; i < 20; i++) {
             data.add("点我跳转activity，动画效果 <" + i + ">");
         }
+    }
+
+    public void updateItems(boolean animated) {
+        vu.updateItems(animated);
     }
 }

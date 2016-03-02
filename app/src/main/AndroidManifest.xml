@@ -23,6 +23,7 @@
         </activity>
 
         <activity android:name=".TextActivity" android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>

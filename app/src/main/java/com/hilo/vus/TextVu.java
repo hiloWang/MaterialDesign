@@ -11,13 +11,15 @@ import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
 import com.hilo.events.factory.CreateVuSubClass;
 import com.hilo.events.factory.VuEventFactory;
-import com.hilo.events.interfaces.IVuEvents;
 import com.hilo.events.iml.AllVuEventsManagerIml;
+import com.hilo.events.interfaces.IVuEvents;
 import com.hilo.interfaces.Vu;
 import com.hilo.others.InvalidVuException;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
@@ -28,9 +30,10 @@ public class TextVu implements Vu {
 
     public View rootView;
     public Context mContext;
-    public RecyclerView mRecyclerView;
     public RecyclerAdapter mAdapter;
     public LinearLayoutManager mLinearLayoutManager;
+    @Bind(R.id.recyclerView)
+    public RecyclerView mRecyclerView;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, Context context) {
@@ -50,7 +53,7 @@ public class TextVu implements Vu {
     private void initViews(LayoutInflater inflater, ViewGroup container, Context context) {
         mContext = context;
         rootView = inflater.inflate(R.layout.activity_text, null);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycleView);
+        ButterKnife.bind(this, rootView);
         mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new RecyclerAdapter(context);
@@ -62,9 +65,9 @@ public class TextVu implements Vu {
     }
 
     private void initEvents() {
-        VuEventFactory vuEventFactory = new CreateVuSubClass();
-        IVuEvents.createVus v = vuEventFactory.createVus(AllVuEventsManagerIml.class);
         try {
+            VuEventFactory vuEventFactory = new CreateVuSubClass();
+            IVuEvents.createVus v = vuEventFactory.createVus(AllVuEventsManagerIml.class);
             v.setupVu(this);
         } catch (InvalidVuException e) {
             e.printStackTrace();

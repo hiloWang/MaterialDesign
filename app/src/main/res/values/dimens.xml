@@ -32,4 +32,6 @@
     <dimen name="text_size_21">21sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
 
+    <dimen name="btn_fab_size">56dp</dimen>
+
 </resources>

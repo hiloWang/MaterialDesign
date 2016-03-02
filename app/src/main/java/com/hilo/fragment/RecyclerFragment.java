@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> {
 
-    private List<String> mData;
+    private List<String> data;
 
     // 下拉刷新
     VuCallBack<Integer> mOnRefreshCallBack = new VuCallBack<Integer>() {
@@ -59,7 +59,7 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         ((MainActivity) mContext).setOnRefreshingCallback(mOnRefreshCallBack);
         ((MainActivity) mContext).setDelDataCallback(mDelDataCallback);
         ((MainActivity) mContext).setAddDataCallback(mAddDataCallback);
-        vu.setAdapterData(mData);
+        vu.setAdapterData(data);
     }
 
     @Override
@@ -73,9 +73,9 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
     }
 
     private void initData() {
-        mData = new ArrayList<>();
+        data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            mData.add("点我跳转activity，动画效果 <" + i + ">");
+            data.add("点我跳转activity，动画效果 <" + i + ">");
         }
     }
 }

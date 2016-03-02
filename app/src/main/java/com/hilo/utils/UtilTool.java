@@ -11,7 +11,7 @@ import com.hilo.base.BasePresenterActivity;
 public class UtilTool {
 
     public static void appLogout(Context context) {
-        BasePresenterActivity.exit();
+        BasePresenterActivity.logoutReceiverRepleaseResources();
     }
 
     public static void setVariablesNull() {

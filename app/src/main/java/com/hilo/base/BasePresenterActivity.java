@@ -121,7 +121,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
                 LAST_CLICK_TIME = System.currentTimeMillis();
                 Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
             } else {
-                exit();
+                logoutReceiverRepleaseResources();
             }
         }
     }
@@ -219,7 +219,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         mActivityManager = null;
     }
 
-    public static void exit() {
+    public static void logoutReceiverRepleaseResources() {
         try {
             UtilTool.setVariablesNull();
             finishAllActivities();
@@ -253,7 +253,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     protected abstract Class<V> getVuClass();
 
     protected abstract void onRefreshingListener();
-
 
     private static class DelayHandler extends Handler {
         private final WeakReference<BasePresenterActivity> weakReference;

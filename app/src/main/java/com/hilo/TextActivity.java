@@ -17,7 +17,6 @@ public class TextActivity extends BasePresenterActivity<TextVu> {
     @Override
     protected void onBindVu() {
         mData = new ArrayList<>();
-        mData = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             mData.add("点我跳转activity，动画效果 <" + i + ">");
         }

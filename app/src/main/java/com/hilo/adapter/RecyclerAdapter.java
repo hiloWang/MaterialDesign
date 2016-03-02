@@ -77,7 +77,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public int getItemCount() {
         if (data != null && data.size() > 0)
             return data.size();
-        return 0;
+        return data.size();
     }
 
     private void initEvents(final ViewHolder holder) {
@@ -113,36 +113,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder /*AnimateViewHolder*/ {
         private View itemView;
-        private TextView mTv1;
-        private ImageView mImage;
+        private TextView tvContentInfo;
+        private ImageView ivItemImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            mTv1 = (TextView) itemView.findViewById(R.id.item_1);
-            mImage = (ImageView) itemView.findViewById(R.id.image);
-
-            mTv1.setOnClickListener(new OnNoDoubleClickListener() {
-                @Override
-                protected void onNoDoubleClickListener(View v) {
-                    if (!mContext.getClass().getName().equals("com.hilo.TextActivity")) {
-                        Intent intent = new Intent(mContext, TextActivity.class);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            ((MainActivity) mContext).getWindow().setExitTransition(new TransitionSet());
-                            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(((MainActivity) mContext)).toBundle());
-                        } else {
-                            mContext.startActivity(intent);
-                        }
-                    } else {
-                        Toast.makeText(mContext, "不可重复跳转当前Activity", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            initViews(itemView);
+            initEvents();
         }
 
         public void bindData(List<String> data, int bgColor, int position) {
-            mTv1.setText(data.get(position).toString());
-            Picasso.with(mContext).load(R.mipmap.chip).into(mImage);
+            tvContentInfo.setText(data.get(position).toString());
+            Picasso.with(mContext).load(R.mipmap.chip).into(ivItemImage);
             itemView.setBackgroundColor(bgColor);
         }
 
@@ -165,5 +148,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     .setListener(listener)
                     .start();
         }*/
+
+
+
+        private void initViews(View itemView) {
+            tvContentInfo = (TextView) itemView.findViewById(R.id.item_1);
+            ivItemImage = (ImageView) itemView.findViewById(R.id.image);
+        }
+
+
+        private void initEvents() {
+            tvContentInfo.setOnClickListener(new OnNoDoubleClickListener() {
+                @Override
+                protected void onNoDoubleClickListener(View v) {
+                    if (!mContext.getClass().getName().equals("com.hilo.TextActivity")) {
+                        Intent intent = new Intent(mContext, TextActivity.class);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            ((MainActivity) mContext).getWindow().setExitTransition(new TransitionSet());
+                            mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(((MainActivity) mContext)).toBundle());
+                        } else {
+                            mContext.startActivity(intent);
+                        }
+                    } else {
+                        Toast.makeText(mContext, "不可重复跳转当前Activity", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
     }
 }

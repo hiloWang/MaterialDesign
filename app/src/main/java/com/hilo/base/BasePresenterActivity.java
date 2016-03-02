@@ -68,19 +68,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         }
     }
 
-    private void initViews(Bundle savedInstanceState) {
-        swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
-                R.layout.activity_swipebackbase, null);
-        mContext = this;
-        mSaveInstanceBunder = savedInstanceState;
-        swipeBackLayout.attachToActivity(this);
-//        mHandler = new DelayHandler(this);
-        registerActivityLoginOut();
-        if (mActivityManager == null) mActivityManager = new LinkedList<>();
-        if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
-        mActivityManager.add(this);
-    }
-
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
@@ -137,6 +124,19 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
                 exit();
             }
         }
+    }
+
+    private void initViews(Bundle savedInstanceState) {
+        swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
+                R.layout.activity_swipebackbase, null);
+        mContext = this;
+        mSaveInstanceBunder = savedInstanceState;
+        swipeBackLayout.attachToActivity(this);
+//        mHandler = new DelayHandler(this);
+        registerActivityLoginOut();
+        if (mActivityManager == null) mActivityManager = new LinkedList<>();
+        if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
+        mActivityManager.add(this);
     }
 
     private void trySetupSwipeRefresh() {

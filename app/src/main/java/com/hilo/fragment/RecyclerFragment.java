@@ -53,7 +53,6 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
         initData();
     }
 
-
     @Override
     protected void onBindVu() {
         vu.setLongClickCallBack(mCallbacks);
@@ -72,7 +71,6 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
     protected Class<RecyclerFragmentVu> getVuClass() {
         return RecyclerFragmentVu.class;
     }
-
 
     private void initData() {
         mData = new ArrayList<>();

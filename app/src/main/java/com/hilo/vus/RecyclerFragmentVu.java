@@ -25,13 +25,13 @@ import jp.wasabeef.recyclerview.animators.FadeInAnimator;
  */
 public class RecyclerFragmentVu implements Vu {
 
-    private Context mContext;
-    protected View rootView;
-    private RecyclerView mRecyclerView;
-    private RecyclerAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
+    public Context mContext;
+    public View rootView;
+    public RecyclerView mRecyclerView;
+    public RecyclerAdapter mAdapter;
+    public LinearLayoutManager mLinearLayoutManager;
 
-    private BasePresenterFragment.Callbacks mCallbacks;
+    public BasePresenterFragment.Callbacks mCallbacks;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, final Context context) {
@@ -62,7 +62,7 @@ public class RecyclerFragmentVu implements Vu {
         ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
 //        scaleAdapter.setFirstOnly(false);
 //        scaleAdapter.setInterpolator(new OvershootInterpolator());
-        mRecyclerView.setAdapter(scaleAdapter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void initEvents() {
@@ -71,16 +71,12 @@ public class RecyclerFragmentVu implements Vu {
     }
 
     private void recyclerViewEvent() {
-        RecyclerFragmentVuEvents.getDefaultRecyclerViewManager().setOnScrollChangeListener(mContext, mRecyclerView, mLinearLayoutManager, mAdapter);
+        RecyclerFragmentVuEvents.getDefaultRecyclerViewManager().setOnScrollChangeListener(this);
     }
 
     private void adapterEvent() {
-        RecyclerFragmentVuEvents.getDefaultRecyclerViewManager().setOnItemClickListener(mContext, mAdapter, mCallbacks);
+        RecyclerFragmentVuEvents.getDefaultRecyclerViewManager().setOnItemClickListener(this);
     }
-
-    /**
-     * ------------------------ bind data ------------------------
-     **/
 
     public void setAdapterData(List<String> data) {
         mAdapter.setData(data);

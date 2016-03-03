@@ -29,11 +29,6 @@ public class TextActivity extends BasePresenterActivity<TextVu> {
         Toast.makeText(mContext, mContext.getClass().getName(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void startIntroAnimation() {
-
-    }
-
     private void initData() {
         mData = new ArrayList<>();
         for (int i = 0; i < 20; i++) {

@@ -32,8 +32,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by hilo on 16/2/24.
  */
@@ -93,14 +91,9 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         settingsMenuItem = menu.findItem(R.id.action_settings);
         settingsMenuItem.setActionView(R.layout.menu_item_view);
-        if (pendingIntroAnimation) {
-            pendingIntroAnimation = false;
-            startIntroAnimation();
-        }
         return true;
     }
 
@@ -197,7 +190,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     }
 
     private void initViews(Bundle savedInstanceState) {
-        ButterKnife.bind(this);
         swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
                 R.layout.activity_swipebackbase, null);
         mContext = this;
@@ -320,14 +312,12 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
 
     protected void beforeDestroy() {
     }
+    protected void updateItems(boolean animated) {
+    }
 
     protected abstract Class<V> getVuClass();
 
     protected abstract void onRefreshingListener();
-
-    protected abstract void startIntroAnimation();
-
-    protected void updateItems(boolean animated) {};
 
     @Override
     public void onStop() {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -37,8 +38,16 @@ public class MainActivity extends BasePresenterActivity<MainVu> implements BaseP
             vu.setRefreshCallBack(mRefreshingCallback);
     }
 
-
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        if (pendingIntroAnimation) {
+            pendingIntroAnimation = false;
+            startIntroAnimation();
+        }
+        return true;
+    }
+
     protected void startIntroAnimation() {
         if (mStartIntroAnimationCallBack != null)
             mStartIntroAnimationCallBack.execute(-1);
@@ -157,7 +166,6 @@ public class MainActivity extends BasePresenterActivity<MainVu> implements BaseP
         return settingsMenuItem;
     }
 
-    @Override
     protected void updateItems(boolean animated) {
         mRecyclerFragment.updateItems(animated);
     }

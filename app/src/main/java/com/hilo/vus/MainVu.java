@@ -111,6 +111,7 @@ public class MainVu implements Vu {
                 .setDuration(ANIM_DURATION_TOOLBAR)
                 .setStartDelay(500);
         ((MainActivity) mContext).getSettingsMenuItem().getActionView().animate()
+                .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
                 .setStartDelay(600)
                 .setListener(new AnimatorListenerAdapter() {

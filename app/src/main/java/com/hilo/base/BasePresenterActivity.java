@@ -133,9 +133,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
             } else {
                 repleaseResources();
                 UtilTool.setVariablesNull();
-                mContext = null;
-                finish();
-                System.gc();
+                finishThis();
             }
         }
     }
@@ -325,6 +323,12 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
                 mActivityManager = null;
             }
         }
+    }
+
+    private void finishThis() {
+        if (mContext != null) mContext = null;
+        finish();
+        System.gc();
     }
 
     protected void onBindVu() {

@@ -35,6 +35,7 @@ public class RecyclerFragmentVu implements Vu {
     public RecyclerAdapter adapter;
     public LinearLayoutManager mLinearLayoutManager;
     public BasePresenterFragment.Callbacks mCallbacks;
+
     @Bind(R.id.recyclerView)
     public RecyclerView mRecyclerView;
 

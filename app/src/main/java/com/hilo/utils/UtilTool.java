@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
 import com.hilo.base.BasePresenterActivity;
+import com.hilo.base.BasePresenterFragment;
+import com.hilo.others.Configuration;
+import com.hilo.receiver.CrashHandler;
 
 /**
  * Created by hilo on 16/2/24.
@@ -15,8 +18,8 @@ public class UtilTool {
     }
 
     public static void setVariablesNull() {
-        BasePresenterActivity.mSwipeRefreshManager = null;
-        BasePresenterActivity.mSwipeRefreshLayout = null;
+        Configuration.setConfigNull();
+        BasePresenterFragment.setVariablesNull();
     }
 
     /**

@@ -7,12 +7,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +25,8 @@ import com.hilo.others.pulltorefresh.PullRefreshLayout;
 import com.hilo.receiver.ExceptionLoingOutReceiver;
 import com.hilo.utils.LogUtils;
 import com.hilo.utils.UtilTool;
-import com.hilo.view.SwipeBackLayout;
 
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -38,14 +38,14 @@ import java.util.Map;
 public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static PullRefreshLayout mSwipeRefreshLayout;
+    public static LinkedList<Activity> mActivityManager;
+    public static Map<String, SoftReference<PullRefreshLayout>> mSwipeRefreshManager;
+
     protected Context mContext;
     protected DelayHandler mHandler;
     protected V vu;
-    public static PullRefreshLayout mSwipeRefreshLayout;
     protected Bundle mSaveInstanceBunder;
-    protected static LinkedList<Activity> mActivityManager;
-    public static Map<String, PullRefreshLayout> mSwipeRefreshManager;
-    protected SwipeBackLayout swipeBackLayout;
     private ExceptionLoingOutReceiver logOutReceiver;
     protected MenuItem settingsMenuItem;
 
@@ -80,6 +80,63 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
             pendingIntroAnimation = true;
         } else {
             updateItems(false);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSwipeRefreshManager.containsKey(getClass().getName())) {
+            mSwipeRefreshLayout = mSwipeRefreshManager.get(getClass().getName()).get();
+        }
+        afterResume();
+    }
+
+    @Override
+    protected void onPause() {
+        beforePause();
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        beforeDestroy();
+        repleaseResources();
+        super.onDestroy();
+    }
+
+    // Press the back button in mobile phone
+    @Override
+    public void onBackPressed() {
+        if (mActivityManager != null && mActivityManager.size() != 1) {
+            super.onBackPressed();
+            overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
+        } else {
+            if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
+                LAST_CLICK_TIME = System.currentTimeMillis();
+                Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
+            } else {
+                repleaseResources();
+                UtilTool.setVariablesNull();
+                mContext = null;
+                finish();
+                System.gc();
+            }
         }
     }
 
@@ -136,7 +193,6 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         return true;
     }
 
-
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -151,52 +207,12 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mSwipeRefreshManager.containsKey(getClass().getName())) {
-            mSwipeRefreshLayout = mSwipeRefreshManager.get(getClass().getName());
-        }
-        afterResume();
-    }
-
-    @Override
-    protected void onPause() {
-        beforePause();
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        beforeDestroy();
-        repleaseResources();
-        super.onDestroy();
-    }
-
-    // Press the back button in mobile phone
-    @Override
-    public void onBackPressed() {
-        if (mActivityManager != null && mActivityManager.size() != 1) {
-            super.onBackPressed();
-            overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
-        } else {
-            if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
-                LAST_CLICK_TIME = System.currentTimeMillis();
-                Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
-            } else {
-                logoutReceiverRepleaseResources();
-            }
-        }
-    }
 
     private void initViews(Bundle savedInstanceState) {
-        swipeBackLayout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
-                R.layout.activity_swipebackbase, null);
         mContext = this;
         mSaveInstanceBunder = savedInstanceState;
-        swipeBackLayout.attachToActivity(this);
 //        mHandler = new DelayHandler(this);
-        registerActivityLoginOut();
+//        registerActivityLoginOut();
         if (mActivityManager == null) mActivityManager = new LinkedList<>();
         if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
         mActivityManager.add(this);
@@ -205,7 +221,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     private void trySetupSwipeRefresh() {
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshManager.put(getClass().getName(), mSwipeRefreshLayout);
+            mSwipeRefreshManager.put(getClass().getName(), new SoftReference<>(mSwipeRefreshLayout));
             mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefreshing() {
@@ -275,6 +291,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     }
 
     private static void finishAllActivities() {
+        if (mActivityManager == null) return;
         for (Activity act : mActivityManager) {
             act.finish();
         }
@@ -293,12 +310,21 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     }
 
     private void repleaseResources() {
-        vu = null;
-        if (mSwipeRefreshManager != null && mSwipeRefreshManager.containsKey(getClass().getName()))
+
+        if (mSwipeRefreshManager != null && mSwipeRefreshManager.containsKey(getClass().getName())) {
             mSwipeRefreshManager.remove(getClass().getName());
-        if (mActivityManager != null && mActivityManager.contains(this))
+            if (mSwipeRefreshManager != null && mSwipeRefreshManager.size() == 0) {
+                mSwipeRefreshManager = null;
+                mSwipeRefreshLayout.removeAllViews();
+                mSwipeRefreshLayout = null;
+            }
+        }
+        if (mActivityManager != null && mActivityManager.contains(this)) {
             mActivityManager.remove(this);
-        unregisterReceiver(logOutReceiver);
+            if (mActivityManager != null && mActivityManager.size() == 0) {
+                mActivityManager = null;
+            }
+        }
     }
 
     protected void onBindVu() {
@@ -312,17 +338,13 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
 
     protected void beforeDestroy() {
     }
+
     protected void updateItems(boolean animated) {
     }
 
     protected abstract Class<V> getVuClass();
 
     protected abstract void onRefreshingListener();
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 
     private static class DelayHandler extends Handler {
         private final WeakReference<BasePresenterActivity> weakReference;

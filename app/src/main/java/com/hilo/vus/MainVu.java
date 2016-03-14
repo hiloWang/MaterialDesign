@@ -3,6 +3,7 @@ package com.hilo.vus;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -14,12 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hilo.MainActivity;
 import com.hilo.R;
-import com.hilo.interfaces.OnNoDoubleClickListener;
 import com.hilo.interfaces.Vu;
 import com.hilo.interfaces.VuCallBack;
 import com.hilo.utils.UIUtils;
@@ -33,8 +32,6 @@ import butterknife.OnClick;
  */
 public class MainVu implements Vu {
 
-    @Bind(R.id.icon_create)
-    ImageButton iconCreate;
     @Bind(R.id.del)
     TextView del;
     @Bind(R.id.add)
@@ -47,9 +44,10 @@ public class MainVu implements Vu {
     NavigationView navigationView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @Bind(R.id.content)
+    CoordinatorLayout clContent;
     private View rootView;
     private Context mContext;
-    private AppCompatActivity activity;
 
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int ANIM_DURATION_FAB = 400;
@@ -66,7 +64,7 @@ public class MainVu implements Vu {
         mContext = context;
         rootView = inflater.inflate(R.layout.activity_main, null);
         ButterKnife.bind(this, rootView);
-        ((MainActivity)mContext).setOnStartIntroAnimationCallBack(mStartIntroAnimationCallBack);
+        ((MainActivity) context).setOnStartIntroAnimationCallBack(mStartIntroAnimationCallBack);
     }
 
     @Override
@@ -76,7 +74,6 @@ public class MainVu implements Vu {
 
     public void setAppCompatActivity(AppCompatActivity activity) {
         if (activity instanceof AppCompatActivity) {
-            this.activity = activity;
             activity.setSupportActionBar(toolbar);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     activity, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -131,7 +128,7 @@ public class MainVu implements Vu {
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
 
-        ((MainActivity)mContext).getRecyclerFragment().updateItems(true);
+        ((MainActivity) mContext).getRecyclerFragment().updateItems(true);
     }
 
     public void setDelDataCallBack(final VuCallBack<Integer> vuCallBack) {
@@ -155,14 +152,14 @@ public class MainVu implements Vu {
     }
 
     public void setPopupWindowCallBack(final VuCallBack<View> vuCallBack) {
-        iconCreate.setOnClickListener(new OnNoDoubleClickListener() {
-            @Override
-            protected void onNoDoubleClickListener(View v) {
-                if (vuCallBack != null) {
-                    vuCallBack.execute(iconCreate);
-                }
-            }
-        });
+//        iconCreate.setOnClickListener(new OnNoDoubleClickListener() {
+//            @Override
+//            protected void onNoDoubleClickListener(View v) {
+//                if (vuCallBack != null) {
+//                    vuCallBack.execute(iconCreate);
+//                }
+//            }
+//        });
     }
 
     public void setRefreshCallBack(VuCallBack<Integer> vuCallBack) {
@@ -173,7 +170,7 @@ public class MainVu implements Vu {
 
     @OnClick(R.id.fab)
     public void onClick() {
-        Snackbar.make(fab, "Replace with your own action", Snackbar.LENGTH_LONG)
+        Snackbar.make(clContent, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
 }

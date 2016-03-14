@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Button android:id="@+id/btnAddData"
+        style="@style/ContextMenuButton"
+        android:text="ADD"
+        android:textColor="@color/btn_context_menu_text_red"/>
+
+
+    <Button android:id="@+id/btnDelData"
+        style="@style/ContextMenuButton"
+        android:text="DEL"
+        android:textColor="@color/btn_context_menu_text_red"/>
+</merge>

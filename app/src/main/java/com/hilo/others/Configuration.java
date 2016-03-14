@@ -82,4 +82,8 @@ public class Configuration {
 		edit.putBoolean(k_isRememberPassword, mConfig.isRememberPassword);
 		edit.commit();
 	}
+
+	public static void setConfigNull() {
+		mConfig = null;
+	}
 }

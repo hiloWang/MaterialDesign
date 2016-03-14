@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 import com.hilo.R;
 
 public class MultiSwipeRefreshLayout extends SwipeRefreshLayout {
-    private CanChildScrollUpCallback mCanChildScrollUpCallback;
 
+    private CanChildScrollUpCallback mCanChildScrollUpCallback;
     private Drawable mForegroundDrawable;
 
     public MultiSwipeRefreshLayout(Context context) {

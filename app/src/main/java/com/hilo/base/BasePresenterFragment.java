@@ -20,13 +20,6 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
     protected V vu;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mContext = getActivity();
-        onCreateInitViews();
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -39,11 +32,12 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
         mCallbacks = (Callbacks) activity;
     }
 
+
     @Override
-    public void onDetach() {
-        super.onDetach();
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = getActivity();
+        onCreateInitViews();
     }
 
     @Nullable
@@ -64,6 +58,16 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         afterResume();
@@ -76,8 +80,15 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    /**
+     * 与onCreateView想对应，当该Fragment的视图被移除时调用
+     */
+    @Override
     public void onDestroyView() {
-        vu = null;
         super.onDestroyView();
     }
 
@@ -85,6 +96,18 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
     public void onDestroy() {
         beforeDestroy();
         super.onDestroy();
+    }
+
+    /**
+     * 与onAttach相对应，当Fragment与Activity关联被取消时调用
+     */
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
+        vu = null;
+        mContext = null;
     }
 
     protected void onBindVu() {
@@ -148,4 +171,8 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
 
     };
 
+    public static void setVariablesNull() {
+        if (sDummyCallbacks != null)
+            sDummyCallbacks = null;
+    }
 }

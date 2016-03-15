@@ -49,11 +49,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public void updateItems(boolean animated) {
         if (data == null) data = new ArrayList<>();
-            data.clear();
+        data.clear();
         for (int i = 0; i < 20; i++) {
             data.add("点我跳转activity，动画效果 <" + i + ">");
         }
-        if(animated) {
+        if (animated) {
             notifyItemRangeChanged(0, data.size());
         } else {
             notifyDataSetChanged();
@@ -174,6 +174,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 protected void onNoDoubleClickListener(View v) {
                     if (!mContext.getClass().getName().equals("com.hilo.TextActivity")) {
                         Intent intent = new Intent(mContext, TextActivity.class);
+//                        FragmentTransaction mFragmentTransaction = ((MainActivity) mContext).getSupportFragmentManager().beginTransaction();
+//                        RecyclerFragment newFragment = RecyclerFragment.getInstance();
+//                        mFragmentTransaction.replace(R.id.fragmentContainer, newFragment);
+//                        mFragmentTransaction.addToBackStack(null);
+//                        mFragmentTransaction.commit();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             ((MainActivity) mContext).getWindow().setExitTransition(new TransitionSet());
                             mContext.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(((MainActivity) mContext)).toBundle());

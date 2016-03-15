@@ -82,4 +82,9 @@ public class RecyclerFragment extends BasePresenterFragment<RecyclerFragmentVu> 
     public void updateItems(boolean animated) {
         vu.updateItems(animated);
     }
+
+    @Override
+    protected void beforeDestroy() {
+        vu.removeVuEvents();
+    }
 }

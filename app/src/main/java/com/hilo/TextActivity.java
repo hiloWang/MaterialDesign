@@ -42,4 +42,9 @@ public class TextActivity extends BasePresenterActivity<TextVu> {
         }
         vu.setAdapterData(mData);
     }
+
+    @Override
+    protected void beforeDestroy() {
+        vu.removeVuEvents();
+    }
 }

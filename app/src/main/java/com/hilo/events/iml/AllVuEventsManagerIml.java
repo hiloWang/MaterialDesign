@@ -20,4 +20,4 @@ public class AllVuEventsManagerIml implements IVuEvents.createVus {
                 throw new InvalidVuException("No match found Vu implementation interface");
             }
         }
-    }
+}

@@ -11,6 +11,7 @@ import android.view.animation.OvershootInterpolator;
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
 import com.hilo.base.BasePresenterFragment;
+import com.hilo.events.RecyclerFragmentVuEvents;
 import com.hilo.events.factory.CreateVuSubClass;
 import com.hilo.events.factory.VuEventFactory;
 import com.hilo.events.iml.AllVuEventsManagerIml;
@@ -35,6 +36,7 @@ public class RecyclerFragmentVu implements Vu {
     public RecyclerAdapter adapter;
     public LinearLayoutManager mLinearLayoutManager;
     public BasePresenterFragment.Callbacks mCallbacks;
+    private IVuEvents vuEvents;
 
     @Bind(R.id.recyclerView)
     public RecyclerView mRecyclerView;
@@ -72,7 +74,7 @@ public class RecyclerFragmentVu implements Vu {
         VuEventFactory factory = new CreateVuSubClass();
         IVuEvents.createVus vus = factory.createVus(AllVuEventsManagerIml.class);
         try {
-            vus.setupVu(this);
+            vuEvents = vus.setupVu(this);
         } catch (InvalidVuException e) {
             e.printStackTrace();
         }
@@ -80,6 +82,12 @@ public class RecyclerFragmentVu implements Vu {
 
     public void setAdapterData(List<String> data) {
         adapter.setData(data);
+    }
+
+    public void removeVuEvents() {
+        if (vuEvents instanceof RecyclerFragmentVuEvents) {
+            ((RecyclerFragmentVuEvents) vuEvents).removeVuEvents();
+        }
     }
 
     public void setDelData(int position) {

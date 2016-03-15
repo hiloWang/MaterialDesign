@@ -13,12 +13,18 @@ import com.hilo.interfaces.Vu;
 
 /**
  * Created by hilo on 16/2/25.
+ * Fragment必须是依存与Activity而存在的，因此Activity的生命周期会直接影响到Fragment的生命周期。
+ * 注意：除了onCreateView，其他的所有方法如果你重写了，必须调用父类对于该方法的实现，
  */
 public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
 
     protected Context mContext;
     protected V vu;
 
+    /**
+     * 当Fragment与Activity发生关联时调用。
+     * @param activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -32,7 +38,6 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
         mCallbacks = (Callbacks) activity;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,13 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
         onCreateInitViews();
     }
 
+    /**
+     * 创建该Fragment的视图
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +69,10 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
         return rootView;
     }
 
+    /**
+     * 当Activity的onCreate方法返回时调用
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -85,7 +101,7 @@ public abstract class BasePresenterFragment<V extends Vu> extends Fragment {
     }
 
     /**
-     * 与onCreateView想对应，当该Fragment的视图被移除时调用
+     * 与onCreateView相对应，当该Fragment的视图被移除时调用
      */
     @Override
     public void onDestroyView() {

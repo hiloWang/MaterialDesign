@@ -13,7 +13,6 @@ public class CreateVuSubClass extends VuEventFactory {
         T event;
         try {
             event = (T) Class.forName(clazz.getName()).newInstance();
-            LogUtils.I("hilo", event + "");
         } catch (InstantiationException e) {
             e.printStackTrace();
             return null;

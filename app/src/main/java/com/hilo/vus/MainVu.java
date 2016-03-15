@@ -48,6 +48,7 @@ public class MainVu implements Vu {
     CoordinatorLayout clContent;
     private View rootView;
     private Context mContext;
+    private AppCompatActivity activity;
 
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int ANIM_DURATION_FAB = 400;
@@ -73,6 +74,7 @@ public class MainVu implements Vu {
     }
 
     public void setAppCompatActivity(AppCompatActivity activity) {
+        this.activity = activity;
         if (activity instanceof AppCompatActivity) {
             activity.setSupportActionBar(toolbar);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -172,5 +174,14 @@ public class MainVu implements Vu {
     public void onClick() {
         Snackbar.make(clContent, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+    }
+
+    public void setupAppCompatActivityNull() {
+        if (activity != null) {
+            activity = null;
+        }
+        if (mContext != null) {
+            mContext = null;
+        }
     }
 }

@@ -123,17 +123,24 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     // Press the back button in mobile phone
     @Override
     public void onBackPressed() {
+
         if (mActivityManager != null && mActivityManager.size() != 1) {
             super.onBackPressed();
             overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
         } else {
-            if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
-                LAST_CLICK_TIME = System.currentTimeMillis();
-                Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
+            int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+            if (backStackCount == 0) {
+                if (System.currentTimeMillis() - LAST_CLICK_TIME > MIN_CLICK_DELAY_TIME) {
+                    LAST_CLICK_TIME = System.currentTimeMillis();
+                    Toast.makeText(this, "在按一次退出", Toast.LENGTH_SHORT).show();
+                } else {
+                    repleaseResources();
+                    UtilTool.setVariablesNull();
+                    finishThis();
+                }
             } else {
-                repleaseResources();
-                UtilTool.setVariablesNull();
-                finishThis();
+                super.onBackPressed();
+                overridePendingTransition(0, R.anim.activity_swipeback_slide_right_out);
             }
         }
     }
@@ -209,7 +216,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
     private void initViews(Bundle savedInstanceState) {
         mContext = this;
         mSaveInstanceBunder = savedInstanceState;
-//        mHandler = new DelayHandler(this);
+        mHandler = new DelayHandler(this);
 //        registerActivityLoginOut();
         if (mActivityManager == null) mActivityManager = new LinkedList<>();
         if (mSwipeRefreshManager == null) mSwipeRefreshManager = new LinkedHashMap<>();
@@ -327,6 +334,7 @@ public abstract class BasePresenterActivity<V extends Vu> extends AppCompatActiv
 
     private void finishThis() {
         if (mContext != null) mContext = null;
+        if (mHandler != null) mHandler.removeCallbacksAndMessages(null);
         finish();
         System.gc();
     }

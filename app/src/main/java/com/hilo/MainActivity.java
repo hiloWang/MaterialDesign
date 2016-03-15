@@ -173,4 +173,9 @@ public class MainActivity extends BasePresenterActivity<MainVu> implements BaseP
     public RecyclerFragment getRecyclerFragment() {
         return mRecyclerFragment;
     }
+
+    @Override
+    protected void beforeDestroy() {
+        vu.setupAppCompatActivityNull();
+    }
 }

@@ -1,9 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.hilo"
         minSdkVersion 14
@@ -11,7 +14,6 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     // value2 错误: 设置如下俩个
     defaultConfig {
         multiDexEnabled true
@@ -20,7 +22,6 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
-
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -29,12 +30,10 @@ android {
     /*  dataBinding {
           enabled true
       }*/
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INFTICE.txt'
     }
-
     // 签名： 对应buildTypes配置
     /*  signingConfigs {
           release {
@@ -44,7 +43,6 @@ android {
               keyPassword "sap2015"
           }
       }*/
-
     buildTypes {
 
         debug {
@@ -75,7 +73,7 @@ android {
          * 多版本打包
          */
         // 版本1
-        hiloApp {
+     /*   hiloApp {
             //Zipalign优化
             zipAlignEnabled true
             //移除无用的resource文件
@@ -99,10 +97,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.release
-        }
+        }*/
     }
 
-    productFlavors {
+    /*productFlavors {
         a_flavors_hiloApp {
             // manifest动态配置属性，例如：高德id，个推id。只需在manifest动态属性处添加${//..这里配置的前缀即可，如map_value}
             manifestPlaceholders = [
@@ -116,8 +114,7 @@ android {
             // 是否要捕抓错误信息提交到后台
             resValue("string", "catchlog", "true")
         }
-
-    }
+    }*/
 }
 
 dependencies {

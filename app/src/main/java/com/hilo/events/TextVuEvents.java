@@ -19,10 +19,22 @@ import com.hilo.vus.TextVu;
 public class TextVuEvents extends IVuEvents {
 
     private int lastVisibleItem;
+    private TextVu vu;
 
     public TextVuEvents(TextVu vu) {
+        this.vu = vu;
+        setListeners();
+    }
+
+    private void setListeners() {
         setRecyclerOnScrollChangeListener(vu);
         setRecyclerOnItemClickListener(vu);
+    }
+
+    public void removeVuEvents() {
+        if (vu != null) {
+            vu = null;
+        }
     }
 
     private void setRecyclerOnScrollChangeListener(final TextVu vu) {

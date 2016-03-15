@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.hilo.R;
 import com.hilo.adapter.RecyclerAdapter;
+import com.hilo.events.TextVuEvents;
 import com.hilo.events.factory.CreateVuSubClass;
 import com.hilo.events.factory.VuEventFactory;
 import com.hilo.events.iml.AllVuEventsManagerIml;
@@ -34,6 +35,7 @@ public class TextVu implements Vu {
     public LinearLayoutManager mLinearLayoutManager;
     @Bind(R.id.recyclerView)
     public RecyclerView mRecyclerView;
+    private IVuEvents vuEvents;
 
     @Override
     public void init(LayoutInflater inflater, ViewGroup container, Context context) {
@@ -68,9 +70,15 @@ public class TextVu implements Vu {
         try {
             VuEventFactory vuEventFactory = new CreateVuSubClass();
             IVuEvents.createVus v = vuEventFactory.createVus(AllVuEventsManagerIml.class);
-            v.setupVu(this);
+            vuEvents = v.setupVu(this);
         } catch (InvalidVuException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void removeVuEvents() {
+        if (vuEvents instanceof TextVuEvents) {
+            ((TextVuEvents)vuEvents).removeVuEvents();
         }
     }
 }

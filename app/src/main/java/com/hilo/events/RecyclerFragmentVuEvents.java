@@ -19,10 +19,21 @@ import com.hilo.vus.RecyclerFragmentVu;
 public class RecyclerFragmentVuEvents extends IVuEvents {
 
     private int lastVisibleItem;
+    private RecyclerFragmentVu vu;
 
     public RecyclerFragmentVuEvents(RecyclerFragmentVu vu){
+        this.vu = vu;
+        setListeners();
+    }
+
+    private void setListeners() {
         setRecyclerOnScrollChangeListener(vu);
         setRecyclerOnItemClickListener(vu);
+    }
+
+    public void removeVuEvents() {
+        if (vu != null)
+            vu = null;
     }
 
     private void setRecyclerOnScrollChangeListener(final RecyclerFragmentVu vuInstance) {
